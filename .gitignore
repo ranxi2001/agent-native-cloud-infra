@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+.worktrees/
+.cache/
+__pycache__/
+*.py[cod]
+*.log
+*.tmp
+lanes/*/tasks/*/evidence/raw/

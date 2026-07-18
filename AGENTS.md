@@ -1,0 +1,92 @@
+# Agent-Native Cloud Infrastructure Workstation
+
+## Purpose
+
+This repository coordinates open-source engineering across independent source repositories. It owns project registration, contribution lanes, generic skills, and short portfolio state. It does not own Karmada, AgentCube, OpenSandbox, or their Git history.
+
+## Start Every Work Loop
+
+1. Read root `PROGRESS.md`.
+2. Run `./workstation status`.
+3. Use `.agents/skills/route-project-work/SKILL.md` to select the project and task.
+4. Run `./workstation context <project>` and read all applicable target-repository instructions.
+5. Read the project `PROJECT.md`, `BACKLOG.md`, and active task files before editing.
+
+Run `./workstation doctor` when paths, remotes, refs, or onboarding state may have changed.
+
+## Ownership Boundaries
+
+- `projects/*.toml`: machine-readable project identity, local path, remotes, branches, domains, and command catalog.
+- `lanes/<project>/PROJECT.md`: dated project snapshot and stable contribution contract.
+- `lanes/<project>/BACKLOG.md`: current candidate priorities and next actions.
+- `lanes/<project>/tasks/<task>/task.toml`: machine-readable task lifecycle state.
+- Task `brief.md`: problem, design, scope, non-goals, and decisions.
+- Task `evidence.md`: commands, source refs, observations, and supported claims.
+- Task `upstream-draft.md`: exact proposed community-facing text; never proof of posting authorization.
+- `PROGRESS.md`: short cross-project restart state only.
+- `.agents/skills/`: reusable cross-project procedures.
+- Target repository/worktree: all product source edits and project tests.
+
+Do not duplicate long target-repository reports here. Link to them and retain only the decision-relevant conclusion.
+
+## Instruction Precedence
+
+Within a target repository, follow the user's current request, the nearest target `AGENTS.md`, root target instructions and native skills, the workstation project profile, then generic workstation rules. Use the stricter compatible safety rule. Surface irreconcilable conflicts before editing.
+
+Project-local instructions are dynamic. A profile is a cached adapter, not authority over current manifests, CI, contribution guides, or nested `AGENTS.md` files.
+
+## Contribution Isolation
+
+- Use one task directory and one topic worktree per upstream contribution.
+- Create topic branches from the latest canonical upstream default branch, not from `intern`, reporting, portfolio, or another feature branch.
+- Keep source clones and `.worktrees/` out of this Git repository.
+- Never let two agents write in the same worktree. Parallelize read-only scans or independent project/task work.
+- Check `git status --short --branch` before and after edits. Preserve user and other-agent changes.
+- Do not reset, clean, rebase, delete a worktree, force-push, or rewrite a branch unless the exact operation is in scope and its consequences have been checked.
+- Prefer `--force-with-lease` over `--force` when rewriting an owned fork branch is explicitly required.
+- Keep canonical upstream remotes read-only or with a disabled push URL. Push only to the personal fork after the relevant gate.
+
+## Upstream Action Gate
+
+Local research, code, commits, and drafts do not authorize upstream mutations. Before creating or updating an issue, PR, draft PR, comment, review, assignment, reviewer request, maintainer mention, or open-PR branch, present and obtain approval for:
+
+- exact repository and target;
+- exact action;
+- exact title and full body/comment;
+- diff and test summary;
+- residual risks and skipped checks;
+- why upstream attention is needed now.
+
+Use English and the official template for upstream text unless the target project explicitly requires otherwise. Security findings must use the project's private reporting channel.
+
+## Evidence And Review
+
+- Ground current community claims in current official data; paginate issue, PR, review, and file queries.
+- Pin code claims to an exact ref and time-sensitive observations to an `observed_at` timestamp.
+- Separate local observations, code behavior, official contracts, maintainer direction, and inference.
+- A green rerun supports nondeterminism, not root cause. Require a producer-to-impact causal chain before patching flakes or retry logic.
+- Prove production reachability before presenting a synthetic fault as a confirmed bug.
+- Distinguish released capability, main-only merged code, proposal, and local measurement.
+- For three or more actors, branches, or state transitions, prefer a small Mermaid flow, sequence, or state diagram plus a prose conclusion.
+
+## Knowledge Capture
+
+- Put stable cross-project procedures in a workstation skill.
+- Put stable project-specific rules in the project profile or target repository's own instructions.
+- Put current task state in `task.toml`, not an improvised Markdown status vocabulary.
+- Put investigation evidence in the task lane.
+- Keep `PROGRESS.md` below roughly one screen; archive details in tasks instead of growing a second report.
+- Do not copy raw chats, volatile GitHub dumps, large generated images, build outputs, or secrets into Git.
+
+## Security
+
+Never commit credentials, tokens, kubeconfigs, cloud account identifiers, private cluster details, or unredacted secret-bearing logs. Keep ignored secret files permission-restricted. Do not print environment secrets while diagnosing tools. Treat sandbox execution, bind mounts, egress, credential injection, proxy trust, tenant identity, privileged containers, KVM, and service-account tokens as security boundaries.
+
+## Validation
+
+- `make test`: CLI contract tests, including temporary Git repositories and worktrees.
+- `make validate-skills`: skill metadata and structure validation.
+- `./workstation doctor`: registered path, Git, ref, and remote consistency.
+- `make check`: full workstation validation plus `git diff --check`.
+
+Run target-project tests inside the target task worktree. Record exact commands and any unrun privileged, cluster, cloud, or release validation tier.

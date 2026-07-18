@@ -1,0 +1,4 @@
+interface:
+  display_name: "Onboard Open Source Project"
+  short_description: "Build a source-grounded onboarding lane for an OSS project"
+  default_prompt: "Use $onboard-open-source-project to onboard this repository into the workstation and prepare its first contribution path."

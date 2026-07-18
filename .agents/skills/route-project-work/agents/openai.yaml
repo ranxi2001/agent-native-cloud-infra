@@ -1,0 +1,4 @@
+interface:
+  display_name: "Route Project Work"
+  short_description: "Route work safely across registered repositories"
+  default_prompt: "Use $route-project-work to select the right project lane and establish repository context before starting this task."

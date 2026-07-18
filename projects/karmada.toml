@@ -1,0 +1,20 @@
+schema_version = 1
+id = "karmada"
+display_name = "Karmada"
+status = "active"
+path = "../karmada"
+lane = "lanes/karmada"
+upstream_repo = "karmada-io/karmada"
+upstream_url = "https://github.com/karmada-io/karmada.git"
+upstream_remote = "upstream"
+fork_url = "https://github.com/ranxi2001/karmada.git"
+fork_remote = "origin"
+default_branch = "master"
+learning_branch = "intern"
+domains = ["kubernetes", "multi-cluster", "scheduling", "control-plane"]
+
+[commands]
+build = ["make all"]
+test = ["make test"]
+verify = ["make verify"]
+generate = ["make update"]

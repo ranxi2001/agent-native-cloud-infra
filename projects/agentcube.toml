@@ -1,0 +1,20 @@
+schema_version = 1
+id = "agentcube"
+display_name = "AgentCube"
+status = "active"
+path = "../agentcube"
+lane = "lanes/agentcube"
+upstream_repo = "volcano-sh/agentcube"
+upstream_url = "https://github.com/volcano-sh/agentcube.git"
+upstream_remote = "upstream"
+fork_url = "https://github.com/ranxi2001/agentcube.git"
+fork_remote = "origin"
+default_branch = "main"
+learning_branch = "intern"
+domains = ["agent-runtime", "kubernetes", "sandbox", "routing"]
+
+[commands]
+build = ["make build-all"]
+test = ["make test"]
+verify = ["make lint", "make fmt"]
+generate = ["make gen-all"]

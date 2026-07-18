@@ -1,0 +1,21 @@
+schema_version = 1
+id = "opensandbox"
+display_name = "OpenSandbox"
+status = "active"
+path = "../opensandbox"
+lane = "lanes/opensandbox"
+upstream_repo = "opensandbox-group/OpenSandbox"
+upstream_url = "https://github.com/opensandbox-group/OpenSandbox.git"
+upstream_remote = "upstream"
+fork_url = ""
+fork_remote = "origin"
+default_branch = "main"
+learning_branch = ""
+domains = ["agent-runtime", "sandbox", "isolation", "multi-tenancy", "sdk"]
+native_skill_globs = ["cli/src/opensandbox_cli/skills/*.md"]
+
+[commands]
+build = ["cd kubernetes && make build", "cd components/execd && make build"]
+test = ["cd kubernetes && make test", "cd server && uv run pytest", "cd cli && uv run --frozen pytest tests/ -q"]
+verify = ["pre-commit run --all-files", "./scripts/verify-license.sh"]
+generate = ["cd kubernetes && make manifests generate"]

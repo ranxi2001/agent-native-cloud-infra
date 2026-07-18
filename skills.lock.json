@@ -1,0 +1,45 @@
+{
+  "inspirations": [
+    {
+      "ref": "d7ba514cc2306ba531af7b01c6563a80a5a02f23",
+      "repository": "ranxi2001/karmada",
+      "scope": "knowledge layering, design and evidence gates, branch isolation"
+    },
+    {
+      "ref": "08d8ba8b52c59e784608e855e63d79893464297a",
+      "repository": "ranxi2001/agentcube",
+      "scope": "upstream posting gates, restart state, runtime review workflow"
+    }
+  ],
+  "schema_version": 1,
+  "skills": {
+    "manage-upstream-contribution": {
+      "revision": 1,
+      "scenario": "Rejected OpenSandbox #1262 after finding the active closing PR despite an unassigned issue",
+      "sha256": "775833105d2607ebb821c6686aea4b0fbf86aa3295fab9f00c79c8151dba6075",
+      "source": "local",
+      "validated_at": "2026-07-16"
+    },
+    "onboard-open-source-project": {
+      "revision": 1,
+      "scenario": "Audited OpenSandbox activation and caught missing clone, missing preflight, and stale issue candidates",
+      "sha256": "d9c1b2e6a8d5b8620f3ebe4906aeb65b7cdc82cae2ed5c52603a0db147e2c0ad",
+      "source": "local",
+      "validated_at": "2026-07-16"
+    },
+    "review-agent-native-infra": {
+      "revision": 2,
+      "scenario": "Reviewed OpenSandbox network-egress tenant and lifecycle boundaries from pinned local source",
+      "sha256": "33380e83d554d45859167e877c3fadd5ac001431f03b08e3827d87b2ab74c5e3",
+      "source": "local",
+      "validated_at": "2026-07-18"
+    },
+    "route-project-work": {
+      "revision": 1,
+      "scenario": "Routed an OpenSandbox Helm candidate without switching or mutating project repositories",
+      "sha256": "7d9fa9673b6958f8f993ad585e5a19aa5365e4460957bffc1c75dec86887cbf6",
+      "source": "local",
+      "validated_at": "2026-07-16"
+    }
+  }
+}

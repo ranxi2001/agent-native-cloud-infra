@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Upstream Contribution"
+  short_description: "Drive an OSS contribution from evidence to review"
+  default_prompt: "Use $manage-upstream-contribution to prepare and validate this upstream contribution without crossing posting gates."

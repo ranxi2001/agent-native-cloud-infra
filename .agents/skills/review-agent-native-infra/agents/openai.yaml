@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Agent-Native Infra"
+  short_description: "Review sandbox and cloud infrastructure changes"
+  default_prompt: "Use $review-agent-native-infra to analyze this agent-native cloud infrastructure design or change."

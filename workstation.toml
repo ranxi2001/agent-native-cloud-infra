@@ -1,0 +1,6 @@
+schema_version = 1
+
+[workspace]
+project_dir = "projects"
+lanes_dir = "lanes"
+worktrees_dir = ".worktrees"
