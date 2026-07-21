@@ -54,5 +54,8 @@ Add `--worktree --branch <kind/topic> [--base <ref>]` only when implementation i
 1. Record task facts in `task.toml`, reasoning in `brief.md`, raw-source links and commands in `evidence.md`, and proposed community text in `upstream-draft.md`.
 2. Update the project `BACKLOG.md` only when priority or next action changed.
 3. Keep root `PROGRESS.md` short: active tasks, blockers, next actions, and stop conditions only.
-4. Run `./workstation status` and report the exact repository/worktree changed and verification completed.
-5. Run `./workstation doctor <project> --context` for projects with configured knowledge overlays.
+4. When work changes a durable cross-project outcome, decision, blocker, or
+   next action, update the current `summaries/weekly/YYYY-Www.md`. Keep one
+   summary per ISO week; do not create daily or monthly rollups.
+5. Run `./workstation status` and report the exact repository/worktree changed and verification completed.
+6. Run `./workstation doctor <project> --context` for projects with configured knowledge overlays.

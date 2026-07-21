@@ -6,7 +6,7 @@ Status: `active`
 
 - Canonical repository: `https://github.com/kubernetes-sigs/work-api.git`
 - Default branch: `master`
-- Default-branch ref: `7263f5630a715438393bc0a129d4b29eb88c0222`
+- Default-branch ref: `9710f2f9d7c6359c76d501104df86e1278942772`
 - Observed at: `2026-07-21`
 - License: Apache License 2.0 (`LICENSE`)
 - Local source: `/home/work-api`

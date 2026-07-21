@@ -43,6 +43,8 @@ Run `./workstation doctor` when paths, remotes, refs, or onboarding state may ha
 - Task `evidence.md`: commands, source refs, observations, and supported claims.
 - Task `upstream-draft.md`: exact proposed community-facing text; never proof of posting authorization.
 - `PROGRESS.md`: short cross-project restart state only.
+- `summaries/weekly/YYYY-Www.md`: compact reviewed cross-project outcomes,
+  evidence links, blockers, and next actions for one ISO week.
 - `.agents/skills/`: reusable cross-project procedures.
 - `.context/projects/<project>/`: ignored, generated links to exact-ref project
   knowledge; never treat the link target as source ownership.
@@ -97,6 +99,8 @@ Use English and the official template for upstream text unless the target projec
 - Put current task state in `task.toml`, not an improvised Markdown status vocabulary.
 - Put investigation evidence in the task lane.
 - Keep `PROGRESS.md` below roughly one screen; archive details in tasks instead of growing a second report.
+- Maintain at most one workstation summary per ISO week. Update it only for a
+  durable cross-project outcome or decision; do not add daily or monthly views.
 - Do not copy raw chats, volatile GitHub dumps, large generated images, build outputs, or secrets into Git.
 
 ## Security

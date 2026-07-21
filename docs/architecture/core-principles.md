@@ -53,19 +53,22 @@ flowchart LR
   conditions; archive detail in task evidence or project reports.
 - Prefer filename/front-matter indexes plus `rg` over recursively reading report
   trees.
-- Record one session summary per independent writer, then generate daily,
-  weekly, and monthly views from those immutable summaries to avoid concurrent
-  append conflicts.
+- Maintain one reviewed `summaries/weekly/YYYY-Www.md` index for durable
+  cross-project outcomes. Update it during the week; do not create daily or
+  monthly rollups.
 - Track exact commands and validation results once; link them instead of
   copying the same chronology into progress, reports, and PR drafts.
 - Add a helper or skill only when it removes repeated work or enforces a real
   safety boundary. Delete unused adapters and stale generated views.
 
-## Session And Summary Boundary
+## Weekly Summary Boundary
 
-Future `sessions/<id>/` records should contain reviewed metadata, decisions,
-evidence links, validation, blockers, and next steps. Raw transcripts belong in
-an ignored permission-restricted archive because they may contain secrets,
-volatile logs, and redundant discussion. Daily, weekly, and monthly summaries
-should be regenerated from curated session records and task state, with a
-small human-owned section for interpretation.
+Weekly summaries are compact, reviewed navigation indexes over authoritative
+task records, exact upstream refs, and project state. They contain outcomes,
+evidence links, blockers, and next actions, but not copied timelines or command
+logs. Raw transcripts belong in an ignored permission-restricted archive
+because they may contain secrets, volatile logs, and redundant discussion.
+
+One weekly cadence is sufficient for restart and retrospective work. Daily and
+monthly summaries would duplicate the same evidence at the workstation's
+current scale and must not be added without measured need.

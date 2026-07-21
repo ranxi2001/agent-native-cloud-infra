@@ -35,9 +35,9 @@
       "validated_at": "2026-07-18"
     },
     "route-project-work": {
-      "revision": 2,
-      "scenario": "Resolved Karmada and AgentCube learning context through exact-ref overlays without switching source branches",
-      "sha256": "cf286484c69c1e93056a883e5b12f4d560f09ad8992b3b91da8c386d929a753b",
+      "revision": 3,
+      "scenario": "Closed a Work API contribution by updating task evidence, portfolio state, and one weekly cross-project summary",
+      "sha256": "89041e03b902c85125cf6d9301b57ba33f326e431921998e08d6456e8a4e3e4f",
       "source": "local",
       "validated_at": "2026-07-21"
     }

@@ -28,7 +28,7 @@ The workstation is the coordination plane. Source repositories and per-task Git 
 ## Quick Start
 
 ```bash
-cd /home/ranxi/projects/agent-native-cloud-infra
+cd /home/agent-native-cloud-infra
 ./workstation list
 ./workstation status
 ./workstation doctor
@@ -112,6 +112,9 @@ read-only snapshot containing only declared knowledge paths. See
 
 The workstation's evolution and context-efficiency rules are defined in
 [`docs/architecture/core-principles.md`](docs/architecture/core-principles.md).
+Durable cross-project outcomes are indexed once per ISO week under
+[`summaries/weekly/`](summaries/weekly/); daily and monthly rollups are
+intentionally omitted.
 
 ## Next Project: OpenSandbox
 

@@ -82,10 +82,13 @@ report indexes or TODO files. Reports and skill directories are mounted for
 search and on-demand reading, not recursively injected into every prompt.
 The doctor warns when always-load context exceeds six files or 256 KiB.
 
-## Planned History Layer
+## Weekly History Index
 
-Later phases can add unique `sessions/<id>/` summaries and generated
-`summaries/daily`, `summaries/weekly`, and `summaries/monthly` indexes. Raw
-conversation transcripts must remain in an ignored, permission-restricted
-archive; only reviewed decisions, evidence, validation, blockers, and next
-steps belong in Git.
+The workstation owns one reviewed `summaries/weekly/YYYY-Www.md` index per ISO
+week. It links durable outcomes to task evidence and exact upstream refs; it is
+not injected into every project overlay. Daily and monthly indexes are omitted
+to avoid duplicating the same state at three cadences.
+
+Raw conversation transcripts must remain in an ignored,
+permission-restricted archive. Only reviewed decisions, evidence, validation,
+blockers, and next steps belong in Git.

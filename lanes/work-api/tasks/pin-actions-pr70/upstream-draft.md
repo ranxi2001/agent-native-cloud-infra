@@ -15,6 +15,9 @@ Completed with explicit approval on 2026-07-21:
 3. With explicit user approval, opened
    `https://github.com/kubernetes-sigs/work-api/pull/72` against
    `kubernetes-sigs/work-api:master` with the exact title and body below.
+4. PR #72 passed EasyCLA and all upstream CI, received `/lgtm /approve`, and
+   merged as `9710f2f9d7c6359c76d501104df86e1278942772` on
+   2026-07-21T03:12:13Z. Dependabot then closed superseded PRs #70 and #71.
 
 ## Title
 
@@ -112,5 +115,5 @@ NONE
   this matches the repository's Kubernetes v0.35.x Go dependencies but is a
   broader test-environment update than SHA pinning alone.
 
-The PR is open. Comments, reviewer requests, branch updates, and other
-follow-up mutations remain separately gated.
+The PR is merged. No follow-up upstream mutation is planned; any later comment,
+branch update, or related contribution remains separately gated.
