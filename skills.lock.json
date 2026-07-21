@@ -35,11 +35,11 @@
       "validated_at": "2026-07-18"
     },
     "route-project-work": {
-      "revision": 1,
-      "scenario": "Routed an OpenSandbox Helm candidate without switching or mutating project repositories",
-      "sha256": "7d9fa9673b6958f8f993ad585e5a19aa5365e4460957bffc1c75dec86887cbf6",
+      "revision": 2,
+      "scenario": "Resolved Karmada and AgentCube learning context through exact-ref overlays without switching source branches",
+      "sha256": "cf286484c69c1e93056a883e5b12f4d560f09ad8992b3b91da8c386d929a753b",
       "source": "local",
-      "validated_at": "2026-07-16"
+      "validated_at": "2026-07-21"
     }
   }
 }

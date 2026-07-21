@@ -4,3 +4,5 @@ schema_version = 1
 project_dir = "projects"
 lanes_dir = "lanes"
 worktrees_dir = ".worktrees"
+context_dir = ".context"
+context_cache_dir = ".cache/context"

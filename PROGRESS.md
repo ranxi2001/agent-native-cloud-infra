@@ -19,6 +19,7 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 
 - Independent workstation repository, project registry, task lanes, and isolated worktree support are implemented.
 - Four generic skills cover routing, onboarding, upstream contribution management, and agent-native infrastructure review.
+- Exact-ref context overlays are implemented for Karmada and AgentCube: both currently resolve to clean `origin/intern` worktrees, with allowlisted snapshot fallback, strict doctor checks, and a 256 KiB always-load budget.
 - Full validation covers CLI behavior, safety-critical remote checks, skill metadata/checksums, and tracked, staged, or untracked whitespace on an unborn repository.
 - `review-agent-native-infra` revision 2 passed a fresh-context static forward test against OpenSandbox `main@18eaee779685`, with pinned evidence, loaded instructions, a lifecycle diagram, explicit validation gaps, and clean-state confirmation.
 - Karmada instructions and native skills remain available from `origin/intern` without using that learning branch as a contribution base.
@@ -40,9 +41,9 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 
 ## Next
 
-1. Complete EasyCLA authorization for Work API PR #72, then monitor the approval-gated upstream workflow and review state.
-2. Continue the structured OpenSandbox `select-first-contribution` task, starting with issue #1265's repository-owned documentation slice.
-3. Create a personal OpenSandbox fork only after a contribution is selected and the exact external action is approved.
+1. Extend context discovery with path-scoped nested `AGENTS.md` and compact report indexes before adding session-derived daily, weekly, or monthly summaries.
+2. Complete EasyCLA authorization for Work API PR #72, then monitor the approval-gated upstream workflow and review state.
+3. Continue the structured OpenSandbox `select-first-contribution` task, starting with issue #1265's repository-owned documentation slice.
 
 ## Stop Conditions
 

@@ -4,13 +4,32 @@
 
 This repository coordinates open-source engineering across independent source repositories. It owns project registration, contribution lanes, generic skills, and short portfolio state. It does not own Karmada, AgentCube, OpenSandbox, or their Git history.
 
+## Core Principles
+
+- Prefer exact refs and executable evidence over copied or remembered context.
+- Load the smallest sufficient context: rules and current state first, indexes
+  next, long reports and raw evidence only when the task requires them.
+- Treat generated overlays, caches, and summaries as rebuildable views, not
+  authoritative state.
+- Evolve by promoting repeated, verified lessons into the narrowest durable
+  owner; replace stale rules instead of accumulating contradictory guidance.
+- Automate discovery, validation, indexing, and cleanup, but never infer
+  authorization for upstream or external mutations.
+- Measure context size, validation cost, and repeated failure patterns; prune
+  machinery that does not improve correctness, restart speed, or review quality.
+
+See `docs/architecture/core-principles.md` for the evolution and efficiency
+model.
+
 ## Start Every Work Loop
 
 1. Read root `PROGRESS.md`.
 2. Run `./workstation status`.
 3. Use `.agents/skills/route-project-work/SKILL.md` to select the project and task.
 4. Run `./workstation context <project>` and read all applicable target-repository instructions.
-5. Read the project `PROJECT.md`, `BACKLOG.md`, and active task files before editing.
+5. If the project has a knowledge ref, run `./workstation context-sync <project>`,
+   then read the overlay's `AGENTS.md`, `PROGRESS.md`, and task-relevant report index.
+6. Read the project `PROJECT.md`, `BACKLOG.md`, and active task files before editing.
 
 Run `./workstation doctor` when paths, remotes, refs, or onboarding state may have changed.
 
@@ -25,6 +44,8 @@ Run `./workstation doctor` when paths, remotes, refs, or onboarding state may ha
 - Task `upstream-draft.md`: exact proposed community-facing text; never proof of posting authorization.
 - `PROGRESS.md`: short cross-project restart state only.
 - `.agents/skills/`: reusable cross-project procedures.
+- `.context/projects/<project>/`: ignored, generated links to exact-ref project
+  knowledge; never treat the link target as source ownership.
 - Target repository/worktree: all product source edits and project tests.
 
 Do not duplicate long target-repository reports here. Link to them and retain only the decision-relevant conclusion.
@@ -87,6 +108,8 @@ Never commit credentials, tokens, kubeconfigs, cloud account identifiers, privat
 - `make test`: CLI contract tests, including temporary Git repositories and worktrees.
 - `make validate-skills`: skill metadata and structure validation.
 - `./workstation doctor`: registered path, Git, ref, and remote consistency.
+- `./workstation doctor --context`: additionally require configured knowledge
+  overlays to match their exact refs.
 - `make check`: full workstation validation plus `git diff --check`.
 
 Run target-project tests inside the target task worktree. Record exact commands and any unrun privileged, cluster, cloud, or release validation tier.

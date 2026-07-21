@@ -10,6 +10,7 @@ The initial registry includes Karmada, AgentCube, and OpenSandbox. All three poi
 flowchart LR
     U[Engineering request] --> R[Project router skill]
     R --> C[projects/*.toml]
+    C --> K[Exact-ref knowledge overlay]
     R --> L[Project lane and task state]
     R --> S[Generic contribution skills]
     R --> N[Target-native AGENTS and skills]
@@ -32,6 +33,7 @@ cd /home/ranxi/projects/agent-native-cloud-infra
 ./workstation status
 ./workstation doctor
 ./workstation context opensandbox
+./workstation context-sync karmada agentcube
 ./workstation task-list
 ```
 
@@ -71,8 +73,9 @@ Target-native skills remain authoritative for target-specific operations. For ex
 | --- | --- |
 | `./workstation list [--json]` | List registered projects and domains. |
 | `./workstation status [project...] [--json]` | Read local branch, dirty state, tracking, and sync counts. |
-| `./workstation doctor [project...] [--json]` | Validate paths, Git repositories, remotes, refs, and instruction discovery. |
+| `./workstation doctor [project...] [--context] [--json]` | Validate registration and optionally require current knowledge overlays. |
 | `./workstation context <project> [--json]` | Show the complete lane, command, instruction, and native-skill context. |
+| `./workstation context-sync [project...] [--json]` | Materialize ignored project knowledge overlays from clean matching worktrees or exact-ref snapshots. |
 | `./workstation project-add ...` | Add a planned project profile without cloning or forking it. |
 | `./workstation task-create ...` | Create structured task state and optionally an isolated worktree. |
 | `./workstation task-status ...` | Move a task through the fixed lifecycle vocabulary. |
@@ -99,6 +102,16 @@ The Karmada and AgentCube `intern` branches proved the value of separating stabl
 - Markdown alone is a poor task database when several projects and agents update status concurrently.
 
 This repository therefore keeps one generic skill layer, machine-readable project/task state, branch-independent discovery of native project skills, and ignored per-task worktrees.
+
+Project learning context is exposed through ignored `.context/projects/<id>/`
+overlays. The registered Git ref and resolved commit are authoritative; links
+are disposable navigation aids. A clean matching learning worktree is used
+when available, while missing, dirty, or mismatched worktrees fall back to a
+read-only snapshot containing only declared knowledge paths. See
+[`docs/architecture/context-overlay.md`](docs/architecture/context-overlay.md).
+
+The workstation's evolution and context-efficiency rules are defined in
+[`docs/architecture/core-principles.md`](docs/architecture/core-principles.md).
 
 ## Next Project: OpenSandbox
 

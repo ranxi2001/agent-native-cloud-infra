@@ -13,10 +13,17 @@ Establish the target repository, task lane, instructions, and write boundary bef
 2. Run `./workstation list` and `./workstation status`.
 3. Select the project from the explicit name, path, issue/PR URL, or registered domains.
 4. Run `./workstation context <project>`.
-5. Read the project lane's `PROJECT.md`, `BACKLOG.md`, and relevant task files.
-6. Read every applicable target-repository instruction before editing. Follow the precedence in `references/routing-contract.md`.
+5. If context reports a knowledge ref, run `./workstation context-sync <project>` and read its always-load files from the generated overlay.
+6. Read the project lane's `PROJECT.md`, `BACKLOG.md`, and relevant task files.
+7. Read every applicable target-repository instruction before editing. Follow the precedence in `references/routing-contract.md`.
 
 If `context` reports an instruction or skill as a Git ref such as `origin/intern:AGENTS.md`, read it with `git -C <repo> show <ref>:<path>`. Do not switch the source worktree merely to load instructions.
+
+Treat `.context/projects/<project>/` as a disposable navigation overlay. The
+configured Git ref and SHA are authoritative. A clean matching learning
+worktree may back the overlay; otherwise `context-sync` uses an exact-ref
+snapshot so temporary worktree loss or dirty local notes cannot change the
+loaded context.
 
 ## Route
 
@@ -48,3 +55,4 @@ Add `--worktree --branch <kind/topic> [--base <ref>]` only when implementation i
 2. Update the project `BACKLOG.md` only when priority or next action changed.
 3. Keep root `PROGRESS.md` short: active tasks, blockers, next actions, and stop conditions only.
 4. Run `./workstation status` and report the exact repository/worktree changed and verification completed.
+5. Run `./workstation doctor <project> --context` for projects with configured knowledge overlays.

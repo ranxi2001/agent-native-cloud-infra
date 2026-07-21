@@ -1,18 +1,21 @@
 # Karmada Project Profile
 
-Observed at: 2026-07-18 (local refs)
+Observed at: 2026-07-21 (local refs)
 
 ## Identity
 
 - Canonical repository: `karmada-io/karmada`
 - Default branch: `master`
-- Local source: `/home/ranxi/projects/karmada`
+- Local source: `/home/karmada`
 - Personal fork: `ranxi2001/karmada` as `origin`
-- Canonical remote: `upstream`, push URL `DISABLED`
-- Canonical ref: `upstream/master` at `1f07b77c35ccac02501a4d0cd4f0bb525d26b887`
-- Learning ref: `origin/intern` at `51f2c14cdbb5a28b40627c6e2db2067b674e3e2d`
-- Current source worktree: clean `intern`, tracking `origin/intern`
-- Local and fork `master`: 12 commits behind `upstream/master`
+- Canonical remote: `upstream`; its push URL is currently enabled and must be
+  disabled before contribution work
+- Canonical ref: `upstream/master` at `e4417e3862918be6e64daeba88ad643d549201b4`
+- Learning ref: `origin/intern` at `838bc82e008155c1fbbb8192d2c986eb5dfe60b1`
+- Current source worktree: clean `feature/cert-mode-rotate`, tracking
+  `upstream/master`, one commit ahead and 17 behind
+- Separate clean intern worktree: `/tmp/karmada-intern-worktree`, matching
+  `origin/intern`
 
 Use current `upstream/master` as the base for candidate analysis and topic worktrees. Do not use the stale local/fork `master` or the checked-out `intern` branch as a topic base; the learning ref has a long independent history.
 
@@ -22,7 +25,11 @@ Karmada is a Go/Kubernetes multi-cluster control plane. Main review surfaces inc
 
 ## Context Sources
 
-Run `./workstation context karmada`. The current `master` worktree contains upstream `CONTRIBUTING.md` and the PR template. Workstation-specific `AGENTS.md` and native skills are discovered from `origin/intern` with `git show`, so loading them does not require a branch switch.
+Run `./workstation context-sync karmada`, then `./workstation context karmada`.
+The generated overlay exposes `AGENTS.md`, `PROGRESS.md`, reports, and native
+skills from exact `origin/intern` without switching the source worktree. If the
+temporary intern worktree disappears or becomes dirty, the overlay falls back
+to an exact-ref snapshot.
 
 Source precedence for new work:
 

@@ -13,6 +13,16 @@ default_branch = "master"
 learning_branch = "intern"
 domains = ["kubernetes", "multi-cluster", "scheduling", "control-plane"]
 
+[knowledge]
+ref = "origin/intern"
+always_load = ["AGENTS.md", "PROGRESS.md", "internship-reports/README.md", "internship-reports/todo.md"]
+
+[knowledge.mounts]
+"AGENTS.md" = "AGENTS.md"
+"PROGRESS.md" = "PROGRESS.md"
+reports = "internship-reports"
+skills = ".agents/skills"
+
 [commands]
 build = ["make all"]
 test = ["make test"]

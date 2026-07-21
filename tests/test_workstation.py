@@ -56,6 +56,8 @@ class WorkstationCLITest(unittest.TestCase):
                 project_dir = "projects"
                 lanes_dir = "lanes"
                 worktrees_dir = ".worktrees"
+                context_dir = ".context"
+                context_cache_dir = ".cache/context"
                 """
             ),
             encoding="utf-8",
@@ -78,6 +80,16 @@ class WorkstationCLITest(unittest.TestCase):
                 learning_branch = "intern"
                 domains = ["sandbox"]
                 native_skill_globs = ["native-skills/*.md"]
+
+                [knowledge]
+                ref = "origin/intern"
+                always_load = ["AGENTS.md", "PROGRESS.md", "internship-reports/todo.md"]
+
+                [knowledge.mounts]
+                "AGENTS.md" = "AGENTS.md"
+                "PROGRESS.md" = "PROGRESS.md"
+                reports = "internship-reports"
+                skills = ".agents/skills"
 
                 [commands]
                 build = ["make build"]
@@ -127,10 +139,14 @@ class WorkstationCLITest(unittest.TestCase):
     def make_learning_ref(self) -> None:
         self.git("switch", "-c", "intern")
         (self.repo / "AGENTS.md").write_text("# Agent rules\n", encoding="utf-8")
+        (self.repo / "PROGRESS.md").write_text("# Learning progress\n", encoding="utf-8")
+        reports = self.repo / "internship-reports"
+        reports.mkdir()
+        (reports / "todo.md").write_text("# Learning tasks\n", encoding="utf-8")
         skill = self.repo / ".agents" / "skills" / "demo-skill"
         skill.mkdir(parents=True)
         (skill / "SKILL.md").write_text("# Demo skill\n", encoding="utf-8")
-        self.git("add", "AGENTS.md", ".agents")
+        self.git("add", "AGENTS.md", "PROGRESS.md", "internship-reports", ".agents")
         self.git("commit", "-m", "add learning context")
         self.git("update-ref", "refs/remotes/origin/intern", "HEAD")
         self.git("switch", "main")
@@ -175,6 +191,171 @@ class WorkstationCLITest(unittest.TestCase):
         )
         branch = self.git("branch", "--show-current").stdout.strip()
         self.assertEqual(branch, "main")
+
+    def test_context_sync_materializes_ref_snapshot_and_mounts(self) -> None:
+        result = json.loads(self.cli("context-sync", "demo", "--json").stdout)[0]
+
+        self.assertEqual(result["mode"], "snapshot")
+        overlay = self.workspace / ".context" / "projects" / "demo"
+        self.assertEqual((overlay / "AGENTS.md").read_text(encoding="utf-8"), "# Agent rules\n")
+        self.assertEqual(
+            (overlay / "reports" / "todo.md").read_text(encoding="utf-8"),
+            "# Learning tasks\n",
+        )
+        self.assertTrue((overlay / "source").is_symlink())
+        self.assertTrue((overlay / "intern").is_symlink())
+        self.assertFalse((overlay / "intern" / "README.md").exists())
+        context = json.loads(self.cli("context", "demo", "--json").stdout)
+        self.assertEqual(context["knowledge_context"]["overlay_state"], "current")
+        self.assertEqual(context["knowledge_context"]["source_mode"], "snapshot")
+
+    def test_context_sync_prefers_clean_learning_worktree(self) -> None:
+        learning_worktree = self.root / "intern-worktree"
+        self.git("worktree", "add", "-b", "intern", str(learning_worktree), "origin/intern")
+
+        result = json.loads(self.cli("context-sync", "demo", "--json").stdout)[0]
+
+        self.assertEqual(result["mode"], "worktree")
+        self.assertEqual(Path(result["source"]), learning_worktree.resolve())
+
+    def test_dirty_learning_worktree_falls_back_to_snapshot(self) -> None:
+        learning_worktree = self.root / "intern-worktree"
+        self.git("worktree", "add", "-b", "intern", str(learning_worktree), "origin/intern")
+        (learning_worktree / "PROGRESS.md").write_text("dirty\n", encoding="utf-8")
+
+        result = json.loads(self.cli("context-sync", "demo", "--json").stdout)[0]
+
+        self.assertEqual(result["mode"], "snapshot")
+        self.assertNotEqual(Path(result["source"]), learning_worktree.resolve())
+
+    def test_live_overlay_becomes_stale_when_worktree_turns_dirty(self) -> None:
+        learning_worktree = self.root / "intern-worktree"
+        self.git("worktree", "add", "-b", "intern", str(learning_worktree), "origin/intern")
+        first = json.loads(self.cli("context-sync", "demo", "--json").stdout)[0]
+        self.assertEqual(first["mode"], "worktree")
+        (learning_worktree / "PROGRESS.md").write_text("dirty\n", encoding="utf-8")
+
+        context = json.loads(self.cli("context", "demo", "--json").stdout)
+        self.assertEqual(context["knowledge_context"]["overlay_state"], "stale")
+        strict = self.cli("doctor", "demo", "--context", check=False)
+        self.assertEqual(strict.returncode, 1)
+
+        second = json.loads(self.cli("context-sync", "demo", "--json").stdout)[0]
+        self.assertEqual(second["mode"], "snapshot")
+
+    def test_doctor_detects_overlay_after_knowledge_ref_moves(self) -> None:
+        self.cli("context-sync", "demo")
+        self.git("switch", "-c", "intern", "origin/intern")
+        (self.repo / "PROGRESS.md").write_text("# New progress\n", encoding="utf-8")
+        self.git("add", "PROGRESS.md")
+        self.git("commit", "-m", "advance learning context")
+        self.git("update-ref", "refs/remotes/origin/intern", "HEAD")
+        self.git("switch", "main")
+        self.git("branch", "-D", "intern")
+
+        stale = self.cli("doctor", "demo", "--context", "--json", check=False)
+
+        self.assertEqual(stale.returncode, 1)
+        self.assertTrue(
+            any(
+                item["level"] == "ERROR" and "overlay is stale" in item["message"]
+                for item in json.loads(stale.stdout)
+            )
+        )
+        self.cli("context-sync", "demo")
+        overlay = self.workspace / ".context" / "projects" / "demo"
+        self.assertEqual(
+            (overlay / "PROGRESS.md").read_text(encoding="utf-8"),
+            "# New progress\n",
+        )
+
+    def test_doctor_context_requires_current_overlay(self) -> None:
+        before = self.cli("doctor", "demo", "--context", "--json", check=False)
+        self.assertEqual(before.returncode, 1)
+        self.assertTrue(
+            any(
+                item["level"] == "ERROR" and "not materialized" in item["message"]
+                for item in json.loads(before.stdout)
+            )
+        )
+
+        self.cli("context-sync", "demo")
+        after = self.cli("doctor", "demo", "--context", "--json")
+        self.assertTrue(
+            any(
+                item["level"] == "OK" and "context overlay is current" in item["message"]
+                for item in json.loads(after.stdout)
+            )
+        )
+
+    def test_doctor_warns_when_always_load_context_exceeds_budget(self) -> None:
+        self.git("switch", "-c", "intern", "origin/intern")
+        (self.repo / "PROGRESS.md").write_text("x" * 270_000, encoding="utf-8")
+        self.git("add", "PROGRESS.md")
+        self.git("commit", "-m", "grow learning context")
+        self.git("update-ref", "refs/remotes/origin/intern", "HEAD")
+        self.git("switch", "main")
+        self.git("branch", "-D", "intern")
+
+        checks = json.loads(self.cli("doctor", "demo", "--json").stdout)
+
+        self.assertTrue(
+            any(
+                item["level"] == "WARN" and "always-load context" in item["message"]
+                for item in checks
+            )
+        )
+
+    def test_registry_rejects_knowledge_path_traversal(self) -> None:
+        project_file = self.workspace / "projects" / "demo.toml"
+        project_file.write_text(
+            project_file.read_text(encoding="utf-8").replace(
+                'reports = "internship-reports"',
+                'reports = "../private"',
+            ),
+            encoding="utf-8",
+        )
+
+        result = self.cli("list", check=False)
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("safe relative path", result.stderr)
+
+    def test_registry_rejects_context_directory_outside_workspace(self) -> None:
+        self.config.write_text(
+            self.config.read_text(encoding="utf-8").replace(
+                'context_dir = ".context"',
+                'context_dir = "/tmp/external-context"',
+            ),
+            encoding="utf-8",
+        )
+
+        result = self.cli("list", check=False)
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("context_dir must stay below", result.stderr)
+
+    def test_context_sync_rejects_escaping_archive_symlink(self) -> None:
+        self.git("switch", "-c", "intern", "origin/intern")
+        (self.repo / "escape").symlink_to("../outside")
+        self.git("add", "escape")
+        self.git("commit", "-m", "add escaping context link")
+        self.git("update-ref", "refs/remotes/origin/intern", "HEAD")
+        self.git("switch", "main")
+        self.git("branch", "-D", "intern")
+        project_file = self.workspace / "projects" / "demo.toml"
+        project_file.write_text(
+            project_file.read_text(encoding="utf-8").replace(
+                'skills = ".agents/skills"',
+                'skills = ".agents/skills"\nescape = "escape"',
+            ),
+            encoding="utf-8",
+        )
+
+        result = self.cli("context-sync", "demo", check=False)
+
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("symlink escapes snapshot", result.stderr)
 
     def test_doctor_treats_missing_planned_repo_as_info(self) -> None:
         result = self.cli("doctor", "--json")

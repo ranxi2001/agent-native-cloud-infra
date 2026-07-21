@@ -4,15 +4,21 @@
 from __future__ import annotations
 
 import argparse
+import fcntl
+import hashlib
+import io
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
+import tarfile
+import tempfile
 import tomllib
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable
 
 
@@ -22,7 +28,10 @@ ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 BRANCH_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._/-]*$")
 REMOTE_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 REPOSITORY_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
+MOUNT_NAME_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
 VALID_STATUSES = {"planned", "active", "paused", "archived"}
+ALWAYS_LOAD_BUDGET_BYTES = 256 * 1024
+ALWAYS_LOAD_BUDGET_FILES = 6
 TASK_STATUSES = (
     "planned",
     "researching",
@@ -47,6 +56,15 @@ class Workspace:
     project_dir: Path
     lanes_dir: Path
     worktrees_dir: Path
+    context_dir: Path
+    context_cache_dir: Path
+
+
+@dataclass(frozen=True)
+class Knowledge:
+    ref: str
+    always_load: tuple[str, ...]
+    mounts: tuple[tuple[str, str], ...]
 
 
 @dataclass(frozen=True)
@@ -67,6 +85,7 @@ class Project:
     domains: tuple[str, ...]
     native_skill_globs: tuple[str, ...]
     commands: dict[str, tuple[str, ...]]
+    knowledge: Knowledge | None
 
     def public(self) -> dict[str, Any]:
         data = asdict(self)
@@ -76,6 +95,12 @@ class Project:
         data["domains"] = list(self.domains)
         data["native_skill_globs"] = list(self.native_skill_globs)
         data["commands"] = {key: list(value) for key, value in self.commands.items()}
+        if self.knowledge:
+            data["knowledge"] = {
+                "ref": self.knowledge.ref,
+                "always_load": list(self.knowledge.always_load),
+                "mounts": dict(self.knowledge.mounts),
+            }
         return data
 
 
@@ -89,6 +114,30 @@ def require_string(doc: dict[str, Any], key: str, source: Path) -> str:
     if not isinstance(value, str):
         raise WorkstationError(f"{source}: {key} must be a string")
     return value
+
+
+def optional_string(doc: dict[str, Any], key: str, default: str, source: Path) -> str:
+    value = doc.get(key, default)
+    if not isinstance(value, str):
+        raise WorkstationError(f"{source}: {key} must be a string")
+    return value
+
+
+def safe_relative_path(value: str, source: Path, field: str) -> str:
+    if not value or "\\" in value:
+        raise WorkstationError(f"{source}: {field} must be a safe POSIX relative path")
+    path = PurePosixPath(value)
+    if path.is_absolute() or any(part in {"", ".", ".."} for part in path.parts):
+        raise WorkstationError(f"{source}: {field} must be a safe relative path")
+    if path.parts[0] == ".git":
+        raise WorkstationError(f"{source}: {field} cannot expose .git")
+    return path.as_posix()
+
+
+def knowledge_paths_from_config(knowledge: Knowledge) -> tuple[str, ...]:
+    return tuple(
+        dict.fromkeys((*knowledge.always_load, *(path for _, path in knowledge.mounts)))
+    )
 
 
 def load_registry(config_path: Path) -> tuple[Workspace, list[Project]]:
@@ -110,7 +159,26 @@ def load_registry(config_path: Path) -> tuple[Workspace, list[Project]]:
         project_dir=resolve_path(root, require_string(workspace_doc, "project_dir", config_path)),
         lanes_dir=resolve_path(root, require_string(workspace_doc, "lanes_dir", config_path)),
         worktrees_dir=resolve_path(root, require_string(workspace_doc, "worktrees_dir", config_path)),
+        context_dir=resolve_path(
+            root,
+            optional_string(workspace_doc, "context_dir", ".context", config_path),
+        ),
+        context_cache_dir=resolve_path(
+            root,
+            optional_string(
+                workspace_doc,
+                "context_cache_dir",
+                ".cache/context",
+                config_path,
+            ),
+        ),
     )
+    for name, path in (
+        ("context_dir", workspace.context_dir),
+        ("context_cache_dir", workspace.context_cache_dir),
+    ):
+        if path == root or root not in path.parents:
+            raise WorkstationError(f"{config_path}: workspace.{name} must stay below {root}")
 
     projects: list[Project] = []
     seen: set[str] = set()
@@ -135,6 +203,7 @@ def load_registry(config_path: Path) -> tuple[Workspace, list[Project]]:
         domains = doc.get("domains", [])
         native_skill_globs = doc.get("native_skill_globs", [])
         commands_doc = doc.get("commands", {})
+        knowledge_doc = doc.get("knowledge")
         if not isinstance(domains, list) or not all(isinstance(item, str) for item in domains):
             raise WorkstationError(f"{source}: domains must be an array of strings")
         if not isinstance(commands_doc, dict):
@@ -151,6 +220,46 @@ def load_registry(config_path: Path) -> tuple[Workspace, list[Project]]:
             ):
                 raise WorkstationError(f"{source}: command values must be arrays of strings")
             commands[name] = tuple(values)
+
+        knowledge: Knowledge | None = None
+        if knowledge_doc is not None:
+            if not isinstance(knowledge_doc, dict):
+                raise WorkstationError(f"{source}: [knowledge] must be a table")
+            knowledge_ref = require_string(knowledge_doc, "ref", source)
+            if not BRANCH_PATTERN.fullmatch(knowledge_ref) or ".." in knowledge_ref:
+                raise WorkstationError(f"{source}: invalid knowledge ref {knowledge_ref!r}")
+            always_load_doc = knowledge_doc.get("always_load", [])
+            mounts_doc = knowledge_doc.get("mounts", {})
+            if not isinstance(always_load_doc, list) or not all(
+                isinstance(item, str) for item in always_load_doc
+            ):
+                raise WorkstationError(f"{source}: knowledge.always_load must be strings")
+            if not isinstance(mounts_doc, dict) or not all(
+                isinstance(name, str) and isinstance(path, str)
+                for name, path in mounts_doc.items()
+            ):
+                raise WorkstationError(f"{source}: [knowledge.mounts] must map names to paths")
+            always_load = tuple(
+                safe_relative_path(item, source, "knowledge.always_load")
+                for item in always_load_doc
+            )
+            mounts: list[tuple[str, str]] = []
+            for name, path in sorted(mounts_doc.items()):
+                if (
+                    not MOUNT_NAME_PATTERN.fullmatch(name)
+                    or name in {"source", "intern", "context.json"}
+                ):
+                    raise WorkstationError(f"{source}: invalid knowledge mount name {name!r}")
+                mounts.append(
+                    (name, safe_relative_path(path, source, f"knowledge.mounts.{name}"))
+                )
+            knowledge = Knowledge(
+                ref=knowledge_ref,
+                always_load=always_load,
+                mounts=tuple(mounts),
+            )
+            if not knowledge_paths_from_config(knowledge):
+                raise WorkstationError(f"{source}: [knowledge] must declare at least one path")
 
         project = Project(
             source=source,
@@ -169,6 +278,7 @@ def load_registry(config_path: Path) -> tuple[Workspace, list[Project]]:
             domains=tuple(domains),
             native_skill_globs=tuple(native_skill_globs),
             commands=commands,
+            knowledge=knowledge,
         )
         for branch_name in (project.default_branch, project.learning_branch):
             if branch_name and (not BRANCH_PATTERN.fullmatch(branch_name) or ".." in branch_name):
@@ -326,6 +436,331 @@ def ref_exists(project: Project, ref: str) -> bool:
     return run_git(project, "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}").returncode == 0
 
 
+def knowledge_ref_sha(project: Project) -> str | None:
+    if not project.knowledge:
+        return None
+    return git_output(project, "rev-parse", f"{project.knowledge.ref}^{{commit}}")
+
+
+def knowledge_paths(project: Project) -> tuple[str, ...]:
+    if not project.knowledge:
+        return ()
+    return knowledge_paths_from_config(project.knowledge)
+
+
+def git_path_exists(project: Project, ref: str, path: str) -> bool:
+    return run_git(project, "cat-file", "-e", f"{ref}:{path}").returncode == 0
+
+
+def git_path_size(project: Project, ref: str, path: str) -> int | None:
+    if git_output(project, "cat-file", "-t", f"{ref}:{path}") != "blob":
+        return None
+    size = git_output(project, "cat-file", "-s", f"{ref}:{path}")
+    return int(size) if size and size.isdigit() else None
+
+
+def always_load_size(project: Project) -> int | None:
+    if not project.knowledge:
+        return None
+    sizes = [
+        git_path_size(project, project.knowledge.ref, path)
+        for path in project.knowledge.always_load
+    ]
+    return sum(size for size in sizes if size is not None) if all(
+        size is not None for size in sizes
+    ) else None
+
+
+def git_worktrees(project: Project) -> list[dict[str, str]]:
+    output = git_output(project, "worktree", "list", "--porcelain")
+    if not output:
+        return []
+    worktrees: list[dict[str, str]] = []
+    for block in output.split("\n\n"):
+        record: dict[str, str] = {}
+        for line in block.splitlines():
+            key, _, value = line.partition(" ")
+            if key in {"worktree", "HEAD", "branch"}:
+                record[key.lower()] = value
+        if "worktree" in record:
+            worktrees.append(record)
+    return worktrees
+
+
+def git_output_at(path: Path, *args: str) -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(path), *args],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
+def worktree_is_clean(path: Path) -> bool:
+    status = git_output_at(path, "status", "--porcelain")
+    return status == ""
+
+
+def discover_knowledge_worktree(project: Project, sha: str) -> Path | None:
+    expected_branch = f"refs/heads/{project.learning_branch}" if project.learning_branch else ""
+    for item in git_worktrees(project):
+        path = Path(item["worktree"])
+        if (
+            item.get("branch") == expected_branch
+            and item.get("head") == sha
+            and path.is_dir()
+            and worktree_is_clean(path)
+        ):
+            return path.resolve()
+    return None
+
+
+def remove_generated_path(path: Path) -> None:
+    if path.is_symlink() or path.is_file():
+        path.unlink()
+    elif path.is_dir():
+        shutil.rmtree(path)
+
+
+def extract_git_archive(archive: bytes, destination: Path) -> None:
+    root = destination.resolve()
+    with tarfile.open(fileobj=io.BytesIO(archive), mode="r:") as tar:
+        for member in tar:
+            relative = PurePosixPath(member.name)
+            if relative.is_absolute() or any(part in {"", ".", ".."} for part in relative.parts):
+                raise WorkstationError(f"unsafe path in knowledge archive: {member.name!r}")
+            target = destination.joinpath(*relative.parts)
+            resolved_parent = target.parent.resolve()
+            if resolved_parent != root and root not in resolved_parent.parents:
+                raise WorkstationError(f"knowledge archive escapes snapshot: {member.name!r}")
+            if member.isdir():
+                target.mkdir(parents=True, exist_ok=True)
+                target.chmod(member.mode & 0o777)
+                continue
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if member.isfile():
+                source = tar.extractfile(member)
+                if source is None:
+                    raise WorkstationError(f"cannot read knowledge archive member {member.name!r}")
+                with source, target.open("wb") as output:
+                    shutil.copyfileobj(source, output)
+                target.chmod(member.mode & 0o777)
+                continue
+            if member.issym():
+                link = PurePosixPath(member.linkname)
+                if link.is_absolute():
+                    raise WorkstationError(f"absolute symlink in knowledge archive: {member.name!r}")
+                resolved_link = (target.parent / Path(*link.parts)).resolve()
+                if resolved_link != root and root not in resolved_link.parents:
+                    raise WorkstationError(f"knowledge symlink escapes snapshot: {member.name!r}")
+                target.symlink_to(member.linkname)
+                continue
+            raise WorkstationError(f"unsupported knowledge archive member: {member.name!r}")
+
+
+def materialize_knowledge_snapshot(
+    workspace: Workspace,
+    project: Project,
+    sha: str,
+) -> Path:
+    paths = knowledge_paths(project)
+    fingerprint = hashlib.sha256("\n".join(paths).encode()).hexdigest()[:12]
+    parent = workspace.context_cache_dir / "snapshots" / project.id
+    destination = parent / f"{sha}-{fingerprint}"
+    marker = destination / ".context-snapshot.json"
+    if marker.is_file():
+        return destination
+    parent.mkdir(parents=True, exist_ok=True)
+    if destination.exists():
+        remove_generated_path(destination)
+    staging = Path(tempfile.mkdtemp(prefix=".snapshot-", dir=parent))
+    try:
+        try:
+            result = subprocess.run(
+                ["git", "-C", str(project.path), "archive", "--format=tar", sha, "--", *paths],
+                check=False,
+                capture_output=True,
+                timeout=120,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            raise WorkstationError(f"cannot archive knowledge for {project.id}: {exc}") from exc
+        if result.returncode != 0:
+            detail = result.stderr.decode(errors="replace").strip()
+            raise WorkstationError(f"cannot archive knowledge for {project.id}: {detail}")
+        extract_git_archive(result.stdout, staging)
+        (staging / ".context-snapshot.json").write_text(
+            json.dumps(
+                {"project": project.id, "ref": project.knowledge.ref, "sha": sha, "paths": paths},
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        try:
+            os.replace(staging, destination)
+        except OSError:
+            if marker.is_file():
+                remove_generated_path(staging)
+            else:
+                raise
+    except Exception:
+        if staging.exists():
+            remove_generated_path(staging)
+        raise
+    return destination
+
+
+def context_overlay_path(workspace: Workspace, project: Project) -> Path:
+    return workspace.context_dir / "projects" / project.id
+
+
+def read_context_metadata(workspace: Workspace, project: Project) -> dict[str, Any] | None:
+    metadata = context_overlay_path(workspace, project) / "context.json"
+    try:
+        value = json.loads(metadata.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) else None
+
+
+def context_overlay_state(workspace: Workspace, project: Project, sha: str | None) -> str:
+    overlay = context_overlay_path(workspace, project)
+    if not overlay.exists():
+        return "missing"
+    metadata = read_context_metadata(workspace, project)
+    if not metadata:
+        return "broken"
+    if metadata.get("ref") != project.knowledge.ref or metadata.get("sha") != sha:
+        return "stale"
+    source_value = metadata.get("source")
+    mode = metadata.get("mode")
+    if not isinstance(source_value, str):
+        return "broken"
+    source = Path(source_value)
+    if mode == "worktree":
+        expected_branch = f"refs/heads/{project.learning_branch}"
+        if (
+            not source.is_dir()
+            or git_output_at(source, "rev-parse", "HEAD") != sha
+            or git_output_at(source, "symbolic-ref", "--quiet", "HEAD") != expected_branch
+            or not worktree_is_clean(source)
+        ):
+            return "stale"
+    elif mode == "snapshot":
+        if not (source / ".context-snapshot.json").is_file():
+            return "broken"
+    else:
+        return "broken"
+    expected_links = ("source", "intern", *(name for name, _ in project.knowledge.mounts))
+    if any(not (overlay / name).is_symlink() or not (overlay / name).exists() for name in expected_links):
+        return "broken"
+    return "current"
+
+
+def _sync_project_context_locked(workspace: Workspace, project: Project) -> dict[str, str]:
+    if not project.knowledge:
+        raise WorkstationError(f"{project.id}: no [knowledge] configuration")
+    if not project.path.is_dir() or git_output(project, "rev-parse", "--is-inside-work-tree") != "true":
+        raise WorkstationError(f"{project.id}: repository is not available")
+    sha = knowledge_ref_sha(project)
+    if not sha:
+        raise WorkstationError(f"{project.id}: knowledge ref {project.knowledge.ref} is unavailable")
+    missing = [
+        path for path in knowledge_paths(project) if not git_path_exists(project, project.knowledge.ref, path)
+    ]
+    if missing:
+        raise WorkstationError(f"{project.id}: missing knowledge path(s): {', '.join(missing)}")
+
+    source = discover_knowledge_worktree(project, sha)
+    mode = "worktree"
+    if source is None:
+        source = materialize_knowledge_snapshot(workspace, project, sha)
+        mode = "snapshot"
+
+    projects_dir = workspace.context_dir / "projects"
+    projects_dir.mkdir(parents=True, exist_ok=True)
+    staging = Path(tempfile.mkdtemp(prefix=f".{project.id}-", dir=projects_dir))
+    destination = context_overlay_path(workspace, project)
+    backup = projects_dir / f".{project.id}.previous"
+    try:
+        (staging / "source").symlink_to(project.path, target_is_directory=True)
+        (staging / "intern").symlink_to(source, target_is_directory=True)
+        source_root = source.resolve()
+        for name, relative in project.knowledge.mounts:
+            target = source.joinpath(*PurePosixPath(relative).parts)
+            if not target.exists():
+                raise WorkstationError(f"{project.id}: resolved knowledge path is absent: {relative}")
+            resolved_target = target.resolve()
+            if resolved_target != source_root and source_root not in resolved_target.parents:
+                raise WorkstationError(f"{project.id}: knowledge mount escapes source: {relative}")
+            (staging / name).symlink_to(target, target_is_directory=target.is_dir())
+        (staging / "context.json").write_text(
+            json.dumps(
+                {
+                    "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+                    "mode": mode,
+                    "project": project.id,
+                    "ref": project.knowledge.ref,
+                    "sha": sha,
+                    "source": str(source),
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        if os.path.lexists(backup):
+            remove_generated_path(backup)
+        if os.path.lexists(destination):
+            os.replace(destination, backup)
+        os.replace(staging, destination)
+        if os.path.lexists(backup):
+            remove_generated_path(backup)
+    except Exception:
+        if staging.exists():
+            remove_generated_path(staging)
+        if not os.path.lexists(destination) and os.path.lexists(backup):
+            os.replace(backup, destination)
+        raise
+    return {
+        "project": project.id,
+        "mode": mode,
+        "ref": project.knowledge.ref,
+        "sha": sha,
+        "source": str(source),
+        "overlay": str(destination),
+    }
+
+
+def sync_project_context(workspace: Workspace, project: Project) -> dict[str, str]:
+    lock_dir = workspace.context_dir / ".locks"
+    lock_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = lock_dir / f"{project.id}.lock"
+    with lock_path.open("a", encoding="utf-8") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        return _sync_project_context_locked(workspace, project)
+
+
+def command_context_sync(workspace: Workspace, projects: list[Project], as_json: bool) -> int:
+    results = [sync_project_context(workspace, project) for project in projects]
+    if as_json:
+        print(json.dumps(results, indent=2, sort_keys=True))
+        return 0
+    rows = [
+        [item["project"], item["mode"], item["ref"], item["sha"][:12], item["overlay"]]
+        for item in results
+    ]
+    print_table(["PROJECT", "MODE", "REF", "SHA", "OVERLAY"], rows)
+    return 0
+
+
 def instruction_context(project: Project) -> tuple[list[str], list[str]]:
     instructions: list[str] = []
     skills: list[str] = []
@@ -369,7 +804,25 @@ def instruction_context(project: Project) -> tuple[list[str], list[str]]:
     return instructions, skills
 
 
-def build_context(project: Project) -> dict[str, Any]:
+def build_knowledge_context(workspace: Workspace, project: Project) -> dict[str, Any] | None:
+    if not project.knowledge:
+        return None
+    sha = knowledge_ref_sha(project)
+    metadata = read_context_metadata(workspace, project)
+    return {
+        "ref": project.knowledge.ref,
+        "sha": sha,
+        "always_load": [f"{project.knowledge.ref}:{path}" for path in project.knowledge.always_load],
+        "always_load_bytes": always_load_size(project),
+        "mounts": dict(project.knowledge.mounts),
+        "overlay": str(context_overlay_path(workspace, project)),
+        "overlay_state": context_overlay_state(workspace, project, sha),
+        "source_mode": metadata.get("mode") if metadata else None,
+        "source": metadata.get("source") if metadata else None,
+    }
+
+
+def build_context(workspace: Workspace, project: Project) -> dict[str, Any]:
     instructions, skills = instruction_context(project)
     data = project.public()
     data["repository"] = project_status(project)
@@ -378,11 +831,12 @@ def build_context(project: Project) -> dict[str, Any]:
     data["profile"] = str(project.lane / "PROJECT.md")
     data["backlog"] = str(project.lane / "BACKLOG.md")
     data["tasks"] = str(project.lane / "tasks")
+    data["knowledge_context"] = build_knowledge_context(workspace, project)
     return data
 
 
-def command_context(project: Project, as_json: bool) -> int:
-    context = build_context(project)
+def command_context(workspace: Workspace, project: Project, as_json: bool) -> int:
+    context = build_context(workspace, project)
     if as_json:
         print(json.dumps(context, indent=2, sort_keys=True))
         return 0
@@ -400,6 +854,16 @@ def command_context(project: Project, as_json: bool) -> int:
         else "(not configured)"
     )
     print(f"Learning branch: {learning_branch}")
+    knowledge = context["knowledge_context"]
+    if knowledge:
+        short_sha = knowledge["sha"][:12] if knowledge["sha"] else "unavailable"
+        print(f"Knowledge ref: {knowledge['ref']}@{short_sha}")
+        print(f"Context overlay: {knowledge['overlay']} [{knowledge['overlay_state']}]")
+        if knowledge["always_load_bytes"] is not None:
+            print(f"Always-load budget: {knowledge['always_load_bytes']}/{ALWAYS_LOAD_BUDGET_BYTES} bytes")
+        print("Always load:")
+        for item in knowledge["always_load"] or ["(none configured)"]:
+            print(f"  - {item}")
     print("Instructions:")
     for item in context["instructions"] or ["(none discovered)"]:
         print(f"  - {item}")
@@ -412,7 +876,69 @@ def command_context(project: Project, as_json: bool) -> int:
     return 0
 
 
-def doctor_messages(project: Project) -> list[tuple[str, str]]:
+def knowledge_doctor_messages(
+    workspace: Workspace,
+    project: Project,
+    strict_context: bool,
+) -> list[tuple[str, str]]:
+    if not project.knowledge:
+        return []
+    sha = knowledge_ref_sha(project)
+    if not sha:
+        return [("ERROR", f"{project.id}: knowledge ref {project.knowledge.ref} is unavailable")]
+    messages: list[tuple[str, str]] = []
+    for path in knowledge_paths(project):
+        if not git_path_exists(project, project.knowledge.ref, path):
+            messages.append(
+                ("ERROR", f"{project.id}: knowledge path is absent at {project.knowledge.ref}: {path}")
+            )
+    load_size = always_load_size(project)
+    if len(project.knowledge.always_load) > ALWAYS_LOAD_BUDGET_FILES:
+        messages.append(
+            (
+                "WARN",
+                f"{project.id}: always-load file count exceeds {ALWAYS_LOAD_BUDGET_FILES}",
+            )
+        )
+    if load_size is not None and load_size > ALWAYS_LOAD_BUDGET_BYTES:
+        messages.append(
+            (
+                "WARN",
+                f"{project.id}: always-load context is {load_size} bytes; "
+                f"budget is {ALWAYS_LOAD_BUDGET_BYTES}",
+            )
+        )
+    state = context_overlay_state(workspace, project, sha)
+    if state == "current":
+        metadata = read_context_metadata(workspace, project) or {}
+        messages.append(
+            (
+                "OK",
+                f"{project.id}: context overlay is current ({metadata.get('mode', 'unknown')}@{sha[:12]})",
+            )
+        )
+    elif state == "missing":
+        messages.append(
+            (
+                "ERROR" if strict_context else "INFO",
+                f"{project.id}: context overlay is not materialized; run context-sync {project.id}",
+            )
+        )
+    else:
+        messages.append(
+            (
+                "ERROR" if strict_context else "WARN",
+                f"{project.id}: context overlay is {state}; run context-sync {project.id}",
+            )
+        )
+    return messages
+
+
+def doctor_messages(
+    workspace: Workspace,
+    project: Project,
+    strict_context: bool = False,
+) -> list[tuple[str, str]]:
     messages: list[tuple[str, str]] = []
     lane_files = (project.lane / "PROJECT.md", project.lane / "BACKLOG.md", project.lane / "tasks")
     for lane_file in lane_files:
@@ -483,12 +1009,18 @@ def doctor_messages(project: Project) -> list[tuple[str, str]]:
     instructions, _ = instruction_context(project)
     if not any(item.endswith("AGENTS.md") for item in instructions):
         messages.append(("INFO", f"{project.id}: no AGENTS.md discovered on the worktree or learning ref"))
+    messages.extend(knowledge_doctor_messages(workspace, project, strict_context))
     if not messages:
         messages.append(("OK", f"{project.id}: repository registration looks consistent"))
     return messages
 
 
-def command_doctor(projects: list[Project], as_json: bool) -> int:
+def command_doctor(
+    workspace: Workspace,
+    projects: list[Project],
+    as_json: bool,
+    strict_context: bool,
+) -> int:
     checks: list[dict[str, str]] = []
     if sys.version_info < (3, 11):
         checks.append({"level": "ERROR", "message": "Python 3.11 or newer is required"})
@@ -497,7 +1029,7 @@ def command_doctor(projects: list[Project], as_json: bool) -> int:
     for project in projects:
         checks.extend(
             {"level": level, "message": message}
-            for level, message in doctor_messages(project)
+            for level, message in doctor_messages(workspace, project, strict_context)
         )
     if as_json:
         print(json.dumps(checks, indent=2, sort_keys=True))
@@ -777,10 +1309,22 @@ def build_parser() -> argparse.ArgumentParser:
     doctor_parser = subparsers.add_parser("doctor", help="validate workstation registration")
     doctor_parser.add_argument("projects", nargs="*")
     doctor_parser.add_argument("--json", action="store_true")
+    doctor_parser.add_argument(
+        "--context",
+        action="store_true",
+        help="require configured context overlays to be current",
+    )
 
     context_parser = subparsers.add_parser("context", help="show one project's complete context")
     context_parser.add_argument("project")
     context_parser.add_argument("--json", action="store_true")
+
+    context_sync = subparsers.add_parser(
+        "context-sync",
+        help="materialize project knowledge overlays",
+    )
+    context_sync.add_argument("projects", nargs="*")
+    context_sync.add_argument("--json", action="store_true")
 
     add_parser = subparsers.add_parser("project-add", help="create a project registration and lane")
     add_parser.add_argument("project")
@@ -825,9 +1369,23 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "status":
             return command_status(select_projects(projects, args.projects), args.json)
         if args.command == "doctor":
-            return command_doctor(select_projects(projects, args.projects), args.json)
+            return command_doctor(
+                workspace,
+                select_projects(projects, args.projects),
+                args.json,
+                args.context,
+            )
         if args.command == "context":
-            return command_context(select_projects(projects, [args.project])[0], args.json)
+            return command_context(
+                workspace,
+                select_projects(projects, [args.project])[0],
+                args.json,
+            )
+        if args.command == "context-sync":
+            selected = select_projects(projects, args.projects)
+            if not args.projects:
+                selected = [project for project in selected if project.knowledge]
+            return command_context_sync(workspace, selected, args.json)
         if args.command == "project-add":
             return command_project_add(args, workspace, projects)
         if args.command == "task-create":

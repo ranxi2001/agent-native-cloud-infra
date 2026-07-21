@@ -1,15 +1,17 @@
 # AgentCube Project Profile
 
-Observed at: 2026-07-16 (local refs)
+Observed at: 2026-07-21 (local refs)
 
 ## Identity
 
 - Canonical repository: `volcano-sh/agentcube`
 - Default branch: `main`
-- Local source: `/home/ranxi/projects/agentcube`
+- Local source: `/home/agentcube`
 - Personal fork: `ranxi2001/agentcube` as `origin`
 - Canonical remote: `upstream`
-- Current source worktree: clean `intern@08d8ba8b52c59e784608e855e63d79893464297a`, tracking `origin/intern`
+- Canonical ref: `upstream/main@58422c02b673daf1cb7991f22e4e1476e97ea1f3`
+- Current source worktree: clean
+  `intern@d2ff20430821b6c0a865f102c619efd562a86778`, tracking `origin/intern`
 
 The long-lived `intern` branch contains project learning records and many project-native skills. Do not use it as the base of an upstream topic branch. Create a separate worktree from current `upstream/main`.
 
@@ -21,7 +23,11 @@ AgentCube is a Go-first Kubernetes agent runtime platform with Python CLI/SDK su
 
 ## Native Context
 
-Run `./workstation context agentcube` and read root `AGENTS.md`. Reuse its project-specific issue, PR, review, runtime smoke, Mermaid, and visualization skills where applicable. Keep the workstation generic layer responsible for multi-project routing and task isolation.
+Run `./workstation context-sync agentcube`, then run the project context
+command and read the generated overlay's root `AGENTS.md`, `PROGRESS.md`, and
+task-relevant report index. Reuse project-specific issue, PR, review, runtime
+smoke, Mermaid, and visualization skills where applicable. Keep the workstation
+generic layer responsible for multi-project routing and task isolation.
 
 ## Commands
 

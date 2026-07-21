@@ -2,6 +2,7 @@
 .env.*
 !.env.example
 .worktrees/
+.context/
 .cache/
 __pycache__/
 *.py[cod]
