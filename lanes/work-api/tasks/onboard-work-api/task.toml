@@ -1,0 +1,11 @@
+schema_version = 1
+project = "work-api"
+slug = "onboard-work-api"
+title = "Onboard Kubernetes SIGs Work API"
+status = "done"
+created_at = "2026-07-21T01:50:17+00:00"
+updated_at = "2026-07-21T01:50:56+00:00"
+issue = ""
+branch = ""
+base = ""
+worktree = ""

@@ -1,0 +1,21 @@
+schema_version = 1
+id = "work-api"
+display_name = "Kubernetes SIGs Work API"
+status = "active"
+path = "../work-api"
+lane = "lanes/work-api"
+upstream_repo = "kubernetes-sigs/work-api"
+upstream_url = "https://github.com/kubernetes-sigs/work-api.git"
+upstream_remote = "upstream"
+fork_url = "https://github.com/ranxi2001/work-api.git"
+fork_remote = "origin"
+default_branch = "master"
+learning_branch = ""
+domains = ["kubernetes", "multi-cluster", "work-api", "controller"]
+native_skill_globs = []
+
+[commands]
+build = ["make controller"]
+test = ["make test"]
+verify = ["make verify"]
+generate = ["make generate", "make manifests"]
