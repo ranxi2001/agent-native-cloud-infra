@@ -1,0 +1,21 @@
+schema_version = 1
+id = "ai-agent-book"
+display_name = "AI Agent Book"
+status = "active"
+path = "../ai-agent-book"
+lane = "lanes/ai-agent-book"
+upstream_repo = "bojieli/ai-agent-book"
+upstream_url = "https://github.com/bojieli/ai-agent-book.git"
+upstream_remote = "upstream"
+fork_url = "https://github.com/ranxi2001/ai-agent-book.git"
+fork_remote = "origin"
+default_branch = "main"
+learning_branch = ""
+domains = ["ai-agent", "book", "documentation"]
+native_skill_globs = []
+
+[commands]
+build = ["bash scripts/build_site.sh", "mkdocs build -d site"]
+test = ["python3 scripts/check_i18n_consistency.py"]
+verify = ["git diff --check"]
+generate = []
