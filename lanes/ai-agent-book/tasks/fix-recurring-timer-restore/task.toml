@@ -1,0 +1,11 @@
+schema_version = 1
+project = "ai-agent-book"
+slug = "fix-recurring-timer-restore"
+title = "Restore recurring timers after restart"
+status = "upstream"
+created_at = "2026-07-23T01:56:38+00:00"
+updated_at = "2026-07-23T02:20:24+00:00"
+issue = "https://github.com/bojieli/ai-agent-book/pull/323"
+branch = "fix/recurring-timer-restore"
+base = "upstream/main"
+worktree = "/Users/onefly/Desktop/project/agent-native-cloud-infra/.worktrees/ai-agent-book/fix-recurring-timer-restore"

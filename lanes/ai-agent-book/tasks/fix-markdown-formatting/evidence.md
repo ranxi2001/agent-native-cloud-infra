@@ -9,6 +9,7 @@
 | 2026-07-22 | Local commit | `e5aa013ddfaac633811f209cf119cdcaea10eca1` | 11 files, 24 insertions and 24 deletions; branch one commit ahead of latest main | Reviewer-ready patch identity |
 | 2026-07-22 | Approved fork push | `git push origin e5aa013...:refs/heads/docs/fix-markdown-formatting` | Fork branch created at the exact approved commit | Reviewed patch is available without rewriting any remote branch |
 | 2026-07-22 | Approved PR creation | `gh pr create` followed by `gh pr view 288` | PR #288 is open and mergeable; head is exactly `e5aa013`; 11 files, +24/-24 | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 288` | Maintainer merged the PR as `e9d1fe79fc1dbf1a950d1eab30721f5fe5ee8b91`; GitGuardian passed | Contribution is complete and must not be duplicated |
 
 ## Skipped Tiers
 
