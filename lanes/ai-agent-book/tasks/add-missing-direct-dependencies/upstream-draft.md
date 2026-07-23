@@ -24,13 +24,9 @@ fix: declare missing direct experiment dependencies
 - declare `requests` and `aiofiles` for the structured-index experiment
 
 Both experiments directly import packages that their local
-`requirements.txt` files do not declare. Installation therefore depends on
-unrelated packages providing them transitively: attention visualization uses
-`requests` in its tools, while structured index uses `requests` in its sample
-downloader and `aiofiles` in its document and API paths.
-
-The version floors match versions already used by other experiments in this
-repository.
+`requirements.txt` files do not declare, so installation depends on unrelated
+packages providing them transitively. The version floors match versions
+already used by other experiments in this repository.
 
 ## Validation
 
@@ -43,6 +39,5 @@ repository.
 - `git diff --check`
 
 The complete ML-heavy requirement sets and live model/API workflows were not
-run. `igraph` and `leidenalg` remain optional because the structured-index
-implementation catches their import failure and falls back to NetworkX
-Louvain.
+run. `igraph` and `leidenalg` remain optional because structured index catches
+their import failure and falls back to NetworkX Louvain.

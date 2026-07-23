@@ -28,8 +28,7 @@ docs(i18n): clarify Tamil labels and translate chapter 3 index
 The expanded Tamil labels follow the full names already used elsewhere in the
 same READMEs. The English entry describes RAPTOR as hierarchical trees with
 recursive summarization and GraphRAG as knowledge graphs, matching the
-experiment README and implementation rather than translating the inaccurate
-“recursive abstract tree” wording literally.
+experiment README and implementation.
 
 ## Validation
 

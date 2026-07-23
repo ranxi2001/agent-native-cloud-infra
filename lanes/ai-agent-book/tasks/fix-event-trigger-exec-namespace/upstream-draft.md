@@ -21,27 +21,15 @@ fix(chapter4): give code interpreter an explicit namespace
 ## Summary
 
 - execute event-trigger agent snippets in one explicit namespace
-- add an offline regression test for functions that reference variables
-  assigned earlier in the same snippet
+- add an offline regression test for functions that reference earlier snippet
+  assignments
 
-`_tool_code_interpreter()` currently calls bare `exec(code)` inside a method.
-Top-level assignments then land in the method's local namespace, while
-functions defined by the snippet resolve names through module globals. A
-common generated snippet such as:
-
-```python
-value = 5
-
-def double():
-    return value * 2
-
-print(double())
-```
-
-therefore raises `NameError: name 'value' is not defined`.
-
-Using one explicit namespace gives the snippet normal module-like name
-resolution. This mirrors the equivalent chapter 2 fix merged in #199.
+`_tool_code_interpreter()` calls bare `exec(code)` inside a method. Top-level
+assignments then use the method's local namespace, while functions defined by
+the snippet resolve names through module globals. A snippet that assigns
+`value = 5` and reads it inside `double()` therefore raises `NameError`. One
+explicit namespace restores module-like name resolution and mirrors the
+chapter 2 fix merged in #199.
 
 ## Validation
 
