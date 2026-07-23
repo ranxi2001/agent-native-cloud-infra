@@ -11,10 +11,9 @@ Completed with explicit user approval on 2026-07-23:
 
 Created: `https://github.com/bojieli/ai-agent-book/pull/326`
 
-GitHub verification shows the PR is open and clean with exact head
-`b1471929f4e29a2bbcd7cea662c0e89c72d72502`; GitGuardian passed. Any later
-branch push, comment, reviewer request, or other upstream mutation remains
-separately gated.
+The maintainer merged the approved head on 2026-07-23 as
+`c83810cfa525bb8bd6a94c6c08305dc8f2bdf8cb`; GitGuardian passed. No follow-up
+upstream action is pending.
 
 ## Title
 

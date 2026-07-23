@@ -12,6 +12,7 @@
 | 2026-07-23 | Local commit | `05035b5d191267f5452107236bfb57efed07fcf2` | 3 files, 3 insertions, 3 deletions; clean worktree one commit ahead of `ef2d0cc` | Reviewer-ready local patch identity |
 | 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:docs/fix-i18n-labels-and-index` | Remote branch is exactly `05035b5d191267f5452107236bfb57efed07fcf2` | Approved patch is available without rewriting an existing branch |
 | 2026-07-23 | Approved PR creation | `gh pr create`; exact body/head/file verification; `gh pr checks 327` | PR #327 is open and clean at the approved head; repository check and GitGuardian passed | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 327`; canonical `upstream/main` history | Maintainer merged PR #327 as `4e6f21253c8826f3675d1517384d7b37e1a4fc76` | Contribution is complete and must not be duplicated |
 
 ## Residual Risk And Skipped Tiers
 

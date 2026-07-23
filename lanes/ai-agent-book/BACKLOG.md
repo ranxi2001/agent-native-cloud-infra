@@ -2,9 +2,9 @@
 
 | Priority | Candidate | Evidence | Status | Next action |
 | --- | --- | --- | --- | --- |
-| P0 | Event-trigger interpreter namespace | PR #325 at exact head `d69742a`; GitGuardian passed | upstream | Monitor review; gate any follow-up mutation |
-| P1 | Missing direct experiment dependencies | PR #326 at exact head `b147192`; GitGuardian passed | upstream | Monitor review; gate any follow-up mutation |
-| P2 | Tamil labels and chapter 3 English index | PR #327 at exact head `05035b5`; repository check and GitGuardian passed | upstream | Monitor review; gate any follow-up mutation |
+| Done | Event-trigger interpreter namespace | PR #325 merged as `37c39dde` | done | Do not duplicate |
+| Done | Missing direct experiment dependencies | PR #326 merged as `c83810cf` | done | Do not duplicate |
+| Done | Tamil labels and chapter 3 English index | PR #327 merged as `4e6f2125` | done | Do not duplicate |
 | P3 | MCP response parsing with `eval()` | Real unsafe parsing pattern; repository has no public security policy or private reporting link | private-route-needed | Find a maintainer-approved private channel before disclosure |
 | Deferred | Active-tool-discovery file handles | Real style/resource-lifetime cleanup with low observed impact | deferred | Reassess only with stronger runtime evidence |
 | Dropped | AutoGen versus AG2 wording | “AutoGen was renamed to AG2” is not a sufficiently accurate project-history claim | dropped | Do not submit the proposed wording |

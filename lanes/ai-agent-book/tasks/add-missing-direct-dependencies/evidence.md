@@ -13,6 +13,7 @@
 | 2026-07-23 | Local commit | `b1471929f4e29a2bbcd7cea662c0e89c72d72502` | 2 files, 4 insertions, 1 deletion; clean worktree one commit ahead of `ef2d0cc` | Reviewer-ready local patch identity |
 | 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/missing-direct-dependencies` | Remote branch is exactly `b1471929f4e29a2bbcd7cea662c0e89c72d72502` | Approved patch is available without rewriting an existing branch |
 | 2026-07-23 | Approved PR creation | `gh pr create`; exact body/head/file verification; `gh pr checks 326` | PR #326 is open and clean at the approved head; GitGuardian passed | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 326`; canonical `upstream/main` history | Maintainer merged PR #326 as `c83810cfa525bb8bd6a94c6c08305dc8f2bdf8cb` | Contribution is complete and must not be duplicated |
 
 ## Residual Risk And Skipped Tiers
 

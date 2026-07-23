@@ -5,7 +5,7 @@ Status: `active`
 ## Sources
 
 - Canonical: `https://github.com/bojieli/ai-agent-book.git`, default branch
-  `main@ef2d0cc12df979a3897ff7c09b1fbf1a8eb01794`, observed 2026-07-23.
+  `main@4e6f21253c8826f3675d1517384d7b37e1a4fc76`, observed 2026-07-23.
 - License: Apache-2.0. Local source: `/Users/onefly/Desktop/project/ai-agent-book`.
 - `upstream` push is disabled; `origin` is `ranxi2001/ai-agent-book`.
 
@@ -31,5 +31,7 @@ Status: `active`
   merged as `2e8aed7983d803c619bd6729ab35bd4be2a6bbba` on 2026-07-23.
 - [PR #325](https://github.com/bojieli/ai-agent-book/pull/325),
   [PR #326](https://github.com/bojieli/ai-agent-book/pull/326), and
-  [PR #327](https://github.com/bojieli/ai-agent-book/pull/327) are open and
-  clean at exact approved heads; all current checks passed.
+  [PR #327](https://github.com/bojieli/ai-agent-book/pull/327) merged as
+  `37c39dde1a4c24474e54e0f2210871da9f141e06`,
+  `c83810cfa525bb8bd6a94c6c08305dc8f2bdf8cb`, and
+  `4e6f21253c8826f3675d1517384d7b37e1a4fc76` on 2026-07-23.

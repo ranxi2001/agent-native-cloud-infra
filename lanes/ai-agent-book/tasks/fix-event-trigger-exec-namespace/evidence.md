@@ -12,6 +12,7 @@
 | 2026-07-23 | Local commit | `d69742a1c005792c01f5a72bf3aa40dec3c2d2de` | 2 files, 77 insertions, 1 deletion; clean worktree one commit ahead of `ef2d0cc` | Reviewer-ready local patch identity |
 | 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/event-trigger-exec-namespace` | Remote branch is exactly `d69742a1c005792c01f5a72bf3aa40dec3c2d2de` | Approved patch is available without rewriting an existing branch |
 | 2026-07-23 | Approved PR creation | `gh pr create`; exact body/head/file verification; `gh pr checks 325` | PR #325 is open and clean at the approved head; GitGuardian passed | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 325`; canonical `upstream/main` history | Maintainer merged PR #325 as `37c39dde1a4c24474e54e0f2210871da9f141e06` | Contribution is complete and must not be duplicated |
 
 ## Residual Risk And Skipped Tiers
 
