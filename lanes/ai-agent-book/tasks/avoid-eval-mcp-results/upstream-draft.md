@@ -7,6 +7,10 @@ and create a non-draft pull request.
 
 Posted exactly as approved: https://github.com/bojieli/ai-agent-book/pull/339
 
+The maintainer merged the approved contribution on 2026-07-23 as
+`cdb4bffc066b1b10f182a587fe1583723c222ac5`. No follow-up upstream action is
+pending.
+
 Title: `fix(collaboration-tools): avoid eval when parsing MCP results`
 
 Body:

@@ -5,8 +5,8 @@ Status: `active`
 ## Sources
 
 - Canonical: `https://github.com/bojieli/ai-agent-book.git`, default branch
-  `main@cb7564c98427e339794e28a101efdca8c40e0a27`, observed 2026-07-23.
-- License: Apache-2.0. Local source: `/Users/onefly/Desktop/project/ai-agent-book`.
+  `main@0c8aa91525ae4fe9bcb9894f7d7392bbf9cc119e`, observed 2026-07-24.
+- License: Apache-2.0. Local source: `/home/ranxi/projects/ai-agent-book`.
 - `upstream` push is disabled; `origin` is `ranxi2001/ai-agent-book`.
 
 ## Architecture
@@ -35,6 +35,8 @@ Status: `active`
   `37c39dde1a4c24474e54e0f2210871da9f141e06`,
   `c83810cfa525bb8bd6a94c6c08305dc8f2bdf8cb`, and
   `4e6f21253c8826f3675d1517384d7b37e1a4fc76` on 2026-07-23.
-- [PR #339](https://github.com/bojieli/ai-agent-book/pull/339) is open from
-  `9ae0c0c1f875a5062edc53b5ff748cfd4ac6eafc`; it is clean and mergeable, and
-  GitGuardian and CodeRabbit passed on 2026-07-23.
+- [PR #339](https://github.com/bojieli/ai-agent-book/pull/339) merged as
+  `cdb4bffc066b1b10f182a587fe1583723c222ac5` on 2026-07-23.
+- The interactive multimodal tools toggle fix is ready locally at
+  `25de486e295fe643347c6d4808091baff61972ae`; its fork push and PR require an
+  exact upstream-action approval.

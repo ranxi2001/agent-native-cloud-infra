@@ -15,6 +15,7 @@
 | 2026-07-23T12:48:00+08:00 | commit | `9ae0c0c1f875a5062edc53b5ff748cfd4ac6eafc`; post-commit validation matrix | Clean worktree, ahead/behind `1/0`; all focused checks passed again | Exact commit is ready for fork push after approval |
 | 2026-07-23T12:51:16+08:00 | approved upstream action | Push to `ranxi2001/ai-agent-book:fix/collaboration-tools-safe-parsing`; [PR #339](https://github.com/bojieli/ai-agent-book/pull/339) | Remote head is exactly `9ae0c0c1`; approved non-draft PR title/body and four-file `+65/-2` diff verified | Exact approved contribution is open against canonical `main` |
 | 2026-07-23T12:54:46+08:00 | upstream checks | GitGuardian and CodeRabbit; `gh pr view 339` | Both passed; PR is `OPEN`, `MERGEABLE`, and `CLEAN` | No current automated merge blocker |
+| 2026-07-24T01:26:00+08:00 | upstream outcome | GitHub pull request API and canonical main history | Maintainer merged PR #339 at `2026-07-23T05:48:24Z` as `cdb4bffc066b1b10f182a587fe1583723c222ac5` | The contribution is complete and must not be duplicated |
 
 ## Residual Risk And Skipped Tiers
 

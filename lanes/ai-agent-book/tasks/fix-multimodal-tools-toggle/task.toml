@@ -1,0 +1,11 @@
+schema_version = 1
+project = "ai-agent-book"
+slug = "fix-multimodal-tools-toggle"
+title = "Fix interactive multimodal tools toggle"
+status = "awaiting-approval"
+created_at = "2026-07-23T17:16:55+00:00"
+updated_at = "2026-07-23T17:34:50+00:00"
+issue = ""
+branch = "fix/multimodal-tools-toggle"
+base = "upstream/main"
+worktree = "/home/ranxi/projects/agent-native-cloud-infra/.worktrees/ai-agent-book/fix-multimodal-tools-toggle"
