@@ -1,0 +1,11 @@
+schema_version = 1
+project = "ai-agent-book"
+slug = "fix-event-trigger-exec-namespace"
+title = "Fix event-trigger code interpreter namespace"
+status = "awaiting-approval"
+created_at = "2026-07-23T02:35:41+00:00"
+updated_at = "2026-07-23T03:00:59+00:00"
+issue = ""
+branch = "fix/event-trigger-exec-namespace"
+base = "upstream/main"
+worktree = "/Users/onefly/Desktop/project/agent-native-cloud-infra/.worktrees/ai-agent-book/fix-event-trigger-exec-namespace"

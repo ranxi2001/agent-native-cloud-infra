@@ -14,6 +14,7 @@
 | 2026-07-23 | Local commit | `c09e43e5f0b256188f687c0d4657f4c68c6f428f` | 3 files, 3 insertions, 7 deletions | Reviewer-ready local patch identity |
 | 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/user-memory-config` | Remote branch is exactly `c09e43e5f0b256188f687c0d4657f4c68c6f428f` | Approved patch is available without rewriting an existing branch |
 | 2026-07-23 | Approved PR creation | `gh pr create`; `gh pr view 322`; `gh pr checks 322` | PR #322 is open and mergeable with the approved title/body, head SHA, and +3/-7 diff; GitGuardian passed | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 322`; canonical `upstream/main` history | Maintainer merged PR #322 as `1912079f0bfc58be74bc077ece0e9fd188be7dbb` | Contribution is complete and must not be duplicated |
 
 ## Skipped Tiers
 

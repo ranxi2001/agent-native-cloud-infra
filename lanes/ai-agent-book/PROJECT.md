@@ -5,7 +5,7 @@ Status: `active`
 ## Sources
 
 - Canonical: `https://github.com/bojieli/ai-agent-book.git`, default branch
-  `main@fd254a3f0ff2baebd9108695f477b58808fa53aa`, observed 2026-07-23.
+  `main@ef2d0cc12df979a3897ff7c09b1fbf1a8eb01794`, observed 2026-07-23.
 - License: Apache-2.0. Local source: `/Users/onefly/Desktop/project/ai-agent-book`.
 - `upstream` push is disabled; `origin` is `ranxi2001/ai-agent-book`.
 
@@ -26,6 +26,9 @@ Status: `active`
 
 - [PR #288](https://github.com/bojieli/ai-agent-book/pull/288) merged into
   `main` as `e9d1fe79fc1dbf1a950d1eab30721f5fe5ee8b91` on 2026-07-22.
-- [PR #322](https://github.com/bojieli/ai-agent-book/pull/322) fixes the stale
-  user-memory config option; [PR #323](https://github.com/bojieli/ai-agent-book/pull/323)
-  restores recurring timers. Both are open at their approved exact heads.
+- [PR #322](https://github.com/bojieli/ai-agent-book/pull/322) merged as
+  `1912079f0bfc58be74bc077ece0e9fd188be7dbb`; [PR #323](https://github.com/bojieli/ai-agent-book/pull/323)
+  merged as `2e8aed7983d803c619bd6729ab35bd4be2a6bbba` on 2026-07-23.
+- Three current topic worktrees cover the chapter 4 code-interpreter namespace,
+  missing direct experiment dependencies, and i18n labels/index text. They are
+  local only and require exact approval before fork pushes or PR creation.

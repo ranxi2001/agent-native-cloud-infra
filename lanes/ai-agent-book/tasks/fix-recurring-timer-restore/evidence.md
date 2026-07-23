@@ -13,6 +13,7 @@
 | 2026-07-23 | Local commit | `7eae95e31bf289a0720e0d3acbd1c05b342c32fc` | 2 files, 220 insertions, 21 deletions | Reviewer-ready local patch identity |
 | 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/recurring-timer-restore` | Remote branch is exactly `7eae95e31bf289a0720e0d3acbd1c05b342c32fc` | Approved patch is available without rewriting an existing branch |
 | 2026-07-23 | Approved PR creation | `gh pr create`; `gh pr view 323`; `gh pr checks 323` | PR #323 is open and mergeable with the approved title/body, head SHA, and +220/-21 diff; GitGuardian passed | Exact approved contribution is upstream for review |
+| 2026-07-23 | Upstream outcome | `gh pr view 323`; canonical `upstream/main` history | Maintainer merged PR #323 as `2e8aed7983d803c619bd6729ab35bd4be2a6bbba` | Contribution is complete and must not be duplicated |
 
 ## Residual Risk And Skipped Tiers
 
