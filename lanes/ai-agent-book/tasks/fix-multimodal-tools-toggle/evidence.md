@@ -14,6 +14,9 @@
 | 2026-07-24T01:30:00+08:00 | Independent review | Read-only review of the complete patch and toggle lifecycle | No blocker or regression found; repeated on and off-to-on transitions preserve consistent state | A second review supports the implementation and test scope |
 | 2026-07-24T01:32:36+08:00 | Local commit | `git commit`; compare `upstream/main...HEAD`; remote branch lookup | `25de486e295fe643347c6d4808091baff61972ae`; 3 files, 55 insertions, 8 deletions; clean worktree one commit ahead; fork branch absent | The reviewer-ready patch is locally identified and no upstream mutation has occurred |
 | 2026-07-24T01:36:00+08:00 | Workstation validation | `./workstation doctor ai-agent-book`; `make test`; `make validate-skills`; `python3 scripts/check_whitespace.py`; `make check` | Project doctor passed, 29 tests passed, 4 skills validated, and tracked/untracked whitespace passed; full check stops only because registered Work API checkout is absent | AI Agent Book lane and workstation changes are valid; the global failure is an unrelated host integration condition |
+| 2026-07-24T01:45:00+08:00 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/multimodal-tools-toggle`; remote ref verification | Remote branch is exactly `25de486e295fe643347c6d4808091baff61972ae` | The approved patch is available on the personal fork without rewriting a branch |
+| 2026-07-24T01:46:51+08:00 | Approved PR creation | GitHub REST pull request creation after two `gh pr create` GraphQL requests ended with EOF and were verified not to have created a PR | Non-draft [PR #377](https://github.com/bojieli/ai-agent-book/pull/377) targets `bojieli/ai-agent-book:main` from the approved head; title, original body, one commit, and 3-file `+55/-8` diff matched the gate | The exact approved contribution is open upstream |
+| 2026-07-24T01:49:42+08:00 | Initial upstream checks | GitGuardian check run, CodeRabbit status/review, PR metadata | GitGuardian and CodeRabbit passed; PR is `OPEN`, `CLEAN`, and `MERGEABLE`; CodeRabbit left one trivial request-layer test-depth suggestion and no inline finding | There is no automated merge blocker; any follow-up branch update requires a new gate |
 
 ## Validation Commands
 
@@ -71,3 +74,8 @@ git diff --check
   provider calls after credential guards reject the credential-cleared setup.
 - The repository has no path-triggered CI job for
   `chapter3/multimodal-agent`; external repository checks may still run on a PR.
+- CodeRabbit suggested additionally mocking the OpenAI-compatible request layer
+  and asserting cached definitions after disable. It classified this as a
+  trivial test-depth improvement, not an implementation defect. The current
+  tests assert both values used by the existing request gate; no unapproved
+  follow-up push or review reply was made.

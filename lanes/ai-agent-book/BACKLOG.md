@@ -2,7 +2,7 @@
 
 | Priority | Candidate | Evidence | Status | Next action |
 | --- | --- | --- | --- | --- |
-| Ready | Interactive multimodal tools toggle | Current-main `/tools on` reproduction; local commit `25de486e` adds complete state transition and offline regressions | awaiting-approval | Obtain exact approval before pushing the fork branch and opening the drafted PR |
+| In review | Interactive multimodal tools toggle | PR #377 is open at `25de486e`, clean and mergeable; GitGuardian and CodeRabbit passed | upstream | Wait for maintainer review; require a new gate before any branch update or reply |
 | Done | Event-trigger interpreter namespace | PR #325 merged as `37c39dde` | done | Do not duplicate |
 | Done | Missing direct experiment dependencies | PR #326 merged as `c83810cf` | done | Do not duplicate |
 | Done | Tamil labels and chapter 3 English index | PR #327 merged as `4e6f2125` | done | Do not duplicate |

@@ -37,6 +37,6 @@ Status: `active`
   `4e6f21253c8826f3675d1517384d7b37e1a4fc76` on 2026-07-23.
 - [PR #339](https://github.com/bojieli/ai-agent-book/pull/339) merged as
   `cdb4bffc066b1b10f182a587fe1583723c222ac5` on 2026-07-23.
-- The interactive multimodal tools toggle fix is ready locally at
-  `25de486e295fe643347c6d4808091baff61972ae`; its fork push and PR require an
-  exact upstream-action approval.
+- [PR #377](https://github.com/bojieli/ai-agent-book/pull/377) is open from
+  `25de486e295fe643347c6d4808091baff61972ae`; it is clean and mergeable, and
+  GitGuardian and CodeRabbit passed on 2026-07-24.

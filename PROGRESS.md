@@ -12,7 +12,7 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 | --- | --- | --- | --- |
 | Karmada | active | Learning checkout `intern` has five reporting changes and is `+72/-44` against `upstream/master`; canonical push is disabled | Preserve the dirty learning checkout and base any contribution worktree on refreshed `upstream/master` |
 | AgentCube | active | Existing intern workflow remains project-native; upstream push is disabled | Route the next new contribution through a workstation task/worktree |
-| AI Agent Book | active | PR #339 merged; interactive multimodal tools toggle fix is ready locally at `25de486e` | Obtain exact approval before pushing the fork branch and opening the drafted PR |
+| AI Agent Book | active | PR #377 is open at `25de486e`, clean and mergeable; GitGuardian and CodeRabbit passed | Wait for maintainer review; require a new gate before any branch update or reply |
 | OpenSandbox | active | Checkout is restored and clean at `main@18eaee77`; canonical push is disabled and no personal fork is registered | Refresh live project context before scouting; register a fork only with explicit authority |
 | Work API | active | PR #72 merged as `9710f2f9d7c6`; the registered checkout is currently absent | Restore the checkout before any new work; otherwise monitor only |
 
@@ -36,8 +36,8 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 - AI Agent Book PRs #325, #326, #327, and #339 merged as `37c39dde`,
   `c83810cf`, `4e6f2125`, and `cdb4bffc`.
 - AI Agent Book source is restored at its registered path with canonical push
-  disabled. A current-main fix for the documented interactive `/tools on`
-  failure is committed locally as `25de486e`; no fork push or PR is authorized.
+  disabled. PR #377 fixes the documented interactive `/tools on` failure from
+  approved head `25de486e`; it is clean and mergeable with initial checks green.
 - No OpenSandbox personal fork, global skill installation, issue claim, comment, branch push, or other upstream action has been performed.
 - Karmada's `intern` checkout has five user reporting changes and is `+72/-44`
   against `upstream/master`; canonical push is disabled. Do not use or clean
@@ -56,7 +56,7 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 
 ## Next
 
-1. Present the exact AI Agent Book multimodal toggle push and PR gate; perform no upstream action before approval.
+1. Monitor AI Agent Book PR #377 for maintainer review; perform no branch update, reply, or reviewer request without a new exact gate.
 2. Extend context discovery with path-scoped nested `AGENTS.md` and compact report indexes.
 3. Preserve Karmada's dirty `intern` checkout and create any contribution lane from refreshed `upstream/master`.
 4. Refresh live OpenSandbox context before continuing candidate selection.

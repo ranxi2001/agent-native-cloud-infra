@@ -2,15 +2,18 @@
 
 Target: `bojieli/ai-agent-book:main`
 
-Proposed action:
+Completed with explicit user approval on 2026-07-24:
 
-1. Push exact commit `25de486e295fe643347c6d4808091baff61972ae` to
+1. Pushed exact commit `25de486e295fe643347c6d4808091baff61972ae` to
    `ranxi2001/ai-agent-book:fix/multimodal-tools-toggle`.
-2. Create a non-draft pull request from that branch to `bojieli/ai-agent-book:main`
-   with the exact title and body below.
+2. Created non-draft [PR #377](https://github.com/bojieli/ai-agent-book/pull/377)
+   from that branch to `bojieli/ai-agent-book:main` with the exact title and
+   original body below.
 
-No upstream action is authorized by this file. Obtain approval for the exact
-target, action, commit, and text before posting.
+GitHub verified one commit, the approved head SHA, and the approved 3-file
+`+55/-8` diff. CodeRabbit subsequently appended its generated release notes to
+the PR body. GitGuardian and CodeRabbit passed; the PR is clean and mergeable.
+No follow-up branch update, comment, or reviewer request is authorized.
 
 ## Title
 
@@ -53,7 +56,7 @@ direct Gemini streaming path already does not consume function tools even when
 enabled at construction; adding Gemini tool calling is outside this fix.
 ```
 
-## Gate Summary
+## Posted Gate Summary
 
 - Diff: 3 files, 55 insertions, 8 deletions.
 - Focused tests: 9 passed on Python 3.12.
