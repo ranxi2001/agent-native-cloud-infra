@@ -11,6 +11,8 @@
 | 2026-07-23 | Lower-bound install | Fresh venv install of exact `requests==2.31.0` and `aiofiles==24.1.0`; import smoke; `pip check` | Both exact versions imported and `pip check` reported no broken requirements | Added packages and selected floors install together |
 | 2026-07-23 | Repository checks | `python3 scripts/check_i18n_consistency.py`; `git diff --check` | Passed | Repository indexes and whitespace remain clean |
 | 2026-07-23 | Local commit | `b1471929f4e29a2bbcd7cea662c0e89c72d72502` | 2 files, 4 insertions, 1 deletion; clean worktree one commit ahead of `ef2d0cc` | Reviewer-ready local patch identity |
+| 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:fix/missing-direct-dependencies` | Remote branch is exactly `b1471929f4e29a2bbcd7cea662c0e89c72d72502` | Approved patch is available without rewriting an existing branch |
+| 2026-07-23 | Approved PR creation | `gh pr create`; exact body/head/file verification; `gh pr checks 326` | PR #326 is open and clean at the approved head; GitGuardian passed | Exact approved contribution is upstream for review |
 
 ## Residual Risk And Skipped Tiers
 

@@ -29,6 +29,7 @@ Status: `active`
 - [PR #322](https://github.com/bojieli/ai-agent-book/pull/322) merged as
   `1912079f0bfc58be74bc077ece0e9fd188be7dbb`; [PR #323](https://github.com/bojieli/ai-agent-book/pull/323)
   merged as `2e8aed7983d803c619bd6729ab35bd4be2a6bbba` on 2026-07-23.
-- Three current topic worktrees cover the chapter 4 code-interpreter namespace,
-  missing direct experiment dependencies, and i18n labels/index text. They are
-  local only and require exact approval before fork pushes or PR creation.
+- [PR #325](https://github.com/bojieli/ai-agent-book/pull/325),
+  [PR #326](https://github.com/bojieli/ai-agent-book/pull/326), and
+  [PR #327](https://github.com/bojieli/ai-agent-book/pull/327) are open and
+  clean at exact approved heads; all current checks passed.

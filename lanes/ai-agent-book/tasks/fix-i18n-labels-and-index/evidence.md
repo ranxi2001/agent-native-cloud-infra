@@ -10,6 +10,8 @@
 | 2026-07-23 | Markdown validation | Pandoc 3.6.1 GFM-to-JSON parse of all three changed files | Passed | Tables and Markdown remain parseable |
 | 2026-07-23 | Repository checks | `python3 scripts/check_i18n_consistency.py`; `git diff --check` | Passed; 92 projects remain aligned across six languages | No locale structure or project-count drift was introduced |
 | 2026-07-23 | Local commit | `05035b5d191267f5452107236bfb57efed07fcf2` | 3 files, 3 insertions, 3 deletions; clean worktree one commit ahead of `ef2d0cc` | Reviewer-ready local patch identity |
+| 2026-07-23 | Approved fork push | Exact-SHA refspec to `ranxi2001/ai-agent-book:docs/fix-i18n-labels-and-index` | Remote branch is exactly `05035b5d191267f5452107236bfb57efed07fcf2` | Approved patch is available without rewriting an existing branch |
+| 2026-07-23 | Approved PR creation | `gh pr create`; exact body/head/file verification; `gh pr checks 327` | PR #327 is open and clean at the approved head; repository check and GitGuardian passed | Exact approved contribution is upstream for review |
 
 ## Residual Risk And Skipped Tiers
 

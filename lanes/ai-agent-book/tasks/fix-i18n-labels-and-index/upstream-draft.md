@@ -2,15 +2,19 @@
 
 Target: `bojieli/ai-agent-book:main`
 
-Proposed gated actions:
+Completed with explicit user approval on 2026-07-23:
 
-1. Push `05035b5d191267f5452107236bfb57efed07fcf2` by exact SHA to
+1. Pushed `05035b5d191267f5452107236bfb57efed07fcf2` by exact SHA to
    `ranxi2001/ai-agent-book:docs/fix-i18n-labels-and-index`.
-2. Open a PR from that branch to `bojieli/ai-agent-book:main` with the exact
-   title and body below.
+2. Opened a PR from that branch to `bojieli/ai-agent-book:main` with the exact
+   approved title and body below.
 
-No upstream action is authorized by this file. Obtain approval for the exact
-commit, target, title, and body before posting.
+Created: `https://github.com/bojieli/ai-agent-book/pull/327`
+
+GitHub verification shows the PR is open and clean with exact head
+`05035b5d191267f5452107236bfb57efed07fcf2`; the repository check and
+GitGuardian passed. Any later branch push, comment, reviewer request, or other
+upstream mutation remains separately gated.
 
 ## Title
 

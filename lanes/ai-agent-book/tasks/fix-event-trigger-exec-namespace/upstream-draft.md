@@ -2,15 +2,19 @@
 
 Target: `bojieli/ai-agent-book:main`
 
-Proposed gated actions:
+Completed with explicit user approval on 2026-07-23:
 
-1. Push `d69742a1c005792c01f5a72bf3aa40dec3c2d2de` by exact SHA to
+1. Pushed `d69742a1c005792c01f5a72bf3aa40dec3c2d2de` by exact SHA to
    `ranxi2001/ai-agent-book:fix/event-trigger-exec-namespace`.
-2. Open a PR from that branch to `bojieli/ai-agent-book:main` with the exact
-   title and body below.
+2. Opened a PR from that branch to `bojieli/ai-agent-book:main` with the exact
+   approved title and body below.
 
-No upstream action is authorized by this file. Obtain approval for the exact
-commit, target, title, and body before posting.
+Created: `https://github.com/bojieli/ai-agent-book/pull/325`
+
+GitHub verification shows the PR is open and clean with exact head
+`d69742a1c005792c01f5a72bf3aa40dec3c2d2de`; GitGuardian passed. Any later
+branch push, comment, reviewer request, or other upstream mutation remains
+separately gated.
 
 ## Title
 
