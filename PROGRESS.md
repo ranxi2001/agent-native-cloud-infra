@@ -12,7 +12,7 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 | --- | --- | --- | --- |
 | Karmada | active | Source worktree is on `feature/cert-mode-rotate`, 17 commits behind `upstream/master`; canonical push is currently enabled | Disable canonical push before new contribution work and base new tasks on refreshed `upstream/master` |
 | AgentCube | active | Existing intern workflow remains project-native; upstream push is disabled | Route the next new contribution through a workstation task/worktree |
-| AI Agent Book | active | PRs #288/#322/#323/#325/#326/#327 merged; no upstream mutation is pending | Refresh upstream and community state before selecting another candidate |
+| AI Agent Book | active | PRs #288/#322/#323/#325/#326/#327 merged; PR #339 is open, clean, mergeable, and green | Wait for maintainer review of #339; do not update it without a new gate |
 | OpenSandbox | active | Registered path `/Users/onefly/Desktop/project/opensandbox` is currently absent | Restore or re-onboard the checkout before resuming contribution selection |
 | Work API | active | PR #72 merged as `9710f2f9d7c6`; the registered checkout is currently absent | Restore the checkout before any new work; otherwise monitor only |
 
@@ -33,8 +33,11 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 - Issues #1253 and #1262 are not viable new contributions because open PRs #1259 and #1263 already implement them.
 - AI Agent Book PRs #288, #322, and #323 merged into `main` as `e9d1fe79`, `1912079f`, and `2e8aed79`; no follow-up mutation is pending.
 - AI Agent Book PRs #325, #326, and #327 merged as `37c39dde`, `c83810cf`, and
-  `4e6f2125`; canonical main is now `4e6f2125` and no follow-up mutation is
-  pending.
+  `4e6f2125`; PR #339 is based on the later canonical
+  `main@cb7564c98427e339794e28a101efdca8c40e0a27`.
+- AI Agent Book PR #339 removes unnecessary expression evaluation from two
+  bundled MCP client examples. It is open at `9ae0c0c1`, clean and mergeable,
+  with GitGuardian and CodeRabbit passing.
 - No OpenSandbox personal fork, global skill installation, issue claim, comment, branch push, or other upstream action has been performed.
 - Karmada is currently on `feature/cert-mode-rotate` and 17 commits behind its tracked `upstream/master`; the canonical push URL is enabled and must be disabled before upstream work.
 - AgentCube canonical `upstream` push is disabled.
@@ -49,7 +52,7 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 
 ## Next
 
-1. Refresh AI Agent Book upstream and community state before selecting another contribution; route the `eval()` finding privately.
+1. Monitor AI Agent Book PR #339 for maintainer review; require a new exact gate before any branch update or comment.
 2. Extend context discovery with path-scoped nested `AGENTS.md` and compact report indexes.
 3. Disable Karmada's canonical push URL before starting new contribution work.
 4. Restore or re-onboard OpenSandbox before continuing candidate selection.
