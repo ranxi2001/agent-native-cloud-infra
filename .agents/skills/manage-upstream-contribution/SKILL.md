@@ -17,7 +17,10 @@ Read `references/contribution-gates.md` before changing code or drafting upstrea
 4. Create the topic branch from the latest canonical upstream default branch, never from a learning, reporting, or portfolio branch.
 5. Write the problem, current behavior, file scope, non-goals, risk, and test matrix in `brief.md` before a non-trivial implementation.
 6. Implement the smallest coherent change. Expand scope only after updating the task design.
-7. Run focused tests first, then required repository checks. Record commands, exact commit, results, skipped tiers, and environment limitations in `evidence.md`.
+7. Run focused tests first, then required repository checks. Accumulate the
+   commands and results while engineering; write them to `evidence.md` once the
+   local change reaches a stable review-ready boundary instead of after every
+   command.
 8. Inspect generated/vendor/formatting changes and `git diff --check`. Do not assume a target named `test`, `lint`, or `build` is non-mutating.
 9. Prepare concise reviewer-facing text in `upstream-draft.md` using the official template and project language. Make it an index to problem, behavior, risk, validation, and stable evidence.
 10. Stop before any upstream-facing mutation and obtain approval for the exact target, action, title, and full body/comment. This includes issues, PRs, draft PRs, comments, reviews, assignments, mentions, reviewer requests, and pushes that update an open PR.
@@ -32,7 +35,14 @@ Read `references/contribution-gates.md` before changing code or drafting upstrea
 
 ## Close
 
-- Update task status and evidence.
+- Treat implementation, validation, commit, approved upstream action, and its
+  initial CI/review result as one work unit when authorization allows. Finish
+  that unit before updating proof and portfolio files.
+- Batch task status, `evidence.md`, project profile, backlog, progress, and
+  weekly-summary updates at the completed milestone. Do not churn these files
+  for intermediate phases that will be superseded in the same work loop.
+- Record each fact in its narrowest durable owner and link it elsewhere; avoid
+  duplicating command-by-command evidence across status files.
 - Preserve reusable project rules in the project profile or target repository instructions, not in chat.
 - Improve this generic skill only for cross-project patterns; keep component-specific workflows in project-native skills.
 - Report local branches, worktrees, commits, tests, residual risks, and the next gated action.

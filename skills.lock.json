@@ -14,11 +14,11 @@
   "schema_version": 1,
   "skills": {
     "manage-upstream-contribution": {
-      "revision": 1,
-      "scenario": "Rejected OpenSandbox #1262 after finding the active closing PR despite an unassigned issue",
-      "sha256": "775833105d2607ebb821c6686aea4b0fbf86aa3295fab9f00c79c8151dba6075",
+      "revision": 2,
+      "scenario": "Completed AI Agent Book PR #339 before batching evidence and portfolio state",
+      "sha256": "1ed3db0b07f7f0e2d744d3fb99a0c987b9ed24765946cb1e44126c7ef7875656",
       "source": "local",
-      "validated_at": "2026-07-16"
+      "validated_at": "2026-07-23"
     },
     "onboard-open-source-project": {
       "revision": 1,
