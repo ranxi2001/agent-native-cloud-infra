@@ -1,21 +1,27 @@
 ---
 name: route-project-work
-description: Route engineering work across the workstation's registered repositories and isolated contribution lanes. Use for any task that names, compares, or changes Karmada, AgentCube, OpenSandbox, another registered project, an issue or PR URL, a project task, or multiple open-source repositories at once; also use before delegating concurrent project work or choosing a target worktree.
+description: Route engineering work across the workstation's registered repositories and isolated contribution lanes, while keeping workstation-owned technical reports outside project registration. Use for any task that names, compares, or changes Karmada, AgentCube, OpenSandbox, another registered project, an issue or PR URL, a project task, multiple open-source repositories, or a report that may require project source context; also use before delegating concurrent project work or choosing a target worktree.
 ---
 
 # Route Project Work
 
 Establish the target repository, task lane, instructions, and write boundary before doing project work.
 
+## Boundary
+
+- Treat `projects/` as registrations for independent source repositories and `lanes/` as their contribution state.
+- Treat `report/` as workstation-owned technical synthesis. Read `report/README.md`; do not create a project, lane, task, or worktree for report-only maintenance.
+- Route into a registered project only when a report claim requires project-source evidence or the request includes project changes. Keep each project's evidence and instructions separate.
+
 ## Start
 
 1. Read root `PROGRESS.md` for cross-project state.
 2. Run `./workstation list` and `./workstation status`.
-3. Select the project from the explicit name, path, issue/PR URL, or registered domains.
-4. Run `./workstation context <project>`.
-5. If context reports a knowledge ref, run `./workstation context-sync <project>` and read its always-load files from the generated overlay.
-6. Read the project lane's `PROJECT.md`, `BACKLOG.md`, and relevant task files.
-7. Read every applicable target-repository instruction before editing. Follow the precedence in `references/routing-contract.md`.
+3. Determine whether the request is report-only or project work.
+4. For report-only work, read `report/README.md` and the selected report. Load exact project context only for claims that depend on project source, then continue without a lane or worktree.
+5. For project work, select the project from the explicit name, path, issue/PR URL, or registered domains and run `./workstation context <project>`.
+6. If context reports a knowledge ref, run `./workstation context-sync <project>` and read its always-load files from the generated overlay.
+7. Read the project lane's `PROJECT.md`, `BACKLOG.md`, relevant task files, and every applicable target-repository instruction before editing. Follow the precedence in `references/routing-contract.md`.
 
 If `context` reports an instruction or skill as a Git ref such as `origin/intern:AGENTS.md`, read it with `git -C <repo> show <ref>:<path>`. Do not switch the source worktree merely to load instructions.
 

@@ -25,11 +25,11 @@ model.
 
 1. Read root `PROGRESS.md`.
 2. Run `./workstation status`.
-3. Use `.agents/skills/route-project-work/SKILL.md` to select the project and task.
-4. Run `./workstation context <project>` and read all applicable target-repository instructions.
-5. If the project has a knowledge ref, run `./workstation context-sync <project>`,
+3. Determine whether the work belongs to a registered source project or the independent `report/` domain.
+4. For project work, use `.agents/skills/route-project-work/SKILL.md`, run `./workstation context <project>`, and read all applicable target-repository instructions. For report-only work, read `report/README.md` and load project context only when a claim depends on project source.
+5. If a selected project has a knowledge ref, run `./workstation context-sync <project>`,
    then read the overlay's `AGENTS.md`, `PROGRESS.md`, and task-relevant report index.
-6. Read the project `PROJECT.md`, `BACKLOG.md`, and active task files before editing.
+6. For project work, read the project `PROJECT.md`, `BACKLOG.md`, and active task files before editing.
 
 Run `./workstation doctor` when paths, remotes, refs, or onboarding state may have changed.
 
@@ -45,12 +45,15 @@ Run `./workstation doctor` when paths, remotes, refs, or onboarding state may ha
 - `PROGRESS.md`: short cross-project restart state only.
 - `summaries/weekly/YYYY-Www.md`: compact reviewed cross-project outcomes,
   evidence links, blockers, and next actions for one ISO week.
+- `report/README.md`: compact registry for workstation-owned technical reports.
+- `report/*.md`: independent cross-project or topic reports; they do not carry
+  repository, contribution-lane, or upstream-publication semantics.
 - `.agents/skills/`: reusable cross-project procedures.
 - `.context/projects/<project>/`: ignored, generated links to exact-ref project
   knowledge; never treat the link target as source ownership.
 - Target repository/worktree: all product source edits and project tests.
 
-Do not duplicate long target-repository reports here. Link to them and retain only the decision-relevant conclusion.
+Do not copy target-repository reports into `report/`. Keep project-specific investigation in its source repository or task lane; reserve `report/` for workstation-owned technical synthesis and link to the authoritative evidence.
 
 ## Instruction Precedence
 
@@ -98,6 +101,8 @@ Use English and the official template for upstream text unless the target projec
 - Put stable project-specific rules in the project profile or target repository's own instructions.
 - Put current task state in `task.toml`, not an improvised Markdown status vocabulary.
 - Put investigation evidence in the task lane.
+- Put independently maintained technical synthesis in `report/` and register it
+  once in `report/README.md`; projects and summaries link to it.
 - Keep `PROGRESS.md` below roughly one screen; archive details in tasks instead of growing a second report.
 - Maintain at most one workstation summary per ISO week. Update it only for a
   durable cross-project outcome or decision; do not add daily or monthly views.

@@ -21,6 +21,7 @@ Use the stricter safety rule when two compatible layers differ. Surface a true c
 | Existing task slug | Use the project named in `task.toml`. |
 | Domain-only request | Compare registered domains and profiles; ask only if multiple targets would materially change the result. |
 | Cross-project comparison | Create no source worktree unless implementation is selected. Keep evidence separated by project. |
+| Workstation technical report | Use `report/README.md`; do not register it as a project. Load a project context only for project-source evidence or changes. |
 
 ## State Boundaries
 
@@ -34,6 +35,7 @@ Use the stricter safety rule when two compatible layers differ. Surface a true c
 | Observations and source links | Task `evidence.md` |
 | Exact proposed upstream text | Task `upstream-draft.md` |
 | Short portfolio restart state | Root `PROGRESS.md` |
+| Independent technical-report catalog and content | `report/README.md` and `report/*.md` |
 | Source code | Target repository task worktree |
 
 Do not copy long project-local reports into the workstation. Link stable local paths or upstream URLs and capture only the decision-relevant conclusion.

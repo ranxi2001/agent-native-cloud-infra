@@ -8,7 +8,10 @@ The initial registry includes Karmada, AgentCube, and OpenSandbox. All three poi
 
 ```mermaid
 flowchart LR
-    U[Engineering request] --> R[Project router skill]
+    U[Engineering request] --> B{Work owner}
+    B --> R[Project router skill]
+    B --> T[report/README.md]
+    T --> A[Independent technical report]
     R --> C[projects/*.toml]
     C --> K[Exact-ref knowledge overlay]
     R --> L[Project lane and task state]
@@ -23,7 +26,7 @@ flowchart LR
     G -->|Yes| P[Fork push or upstream action]
 ```
 
-The workstation is the coordination plane. Source repositories and per-task Git worktrees remain independent data planes.
+The workstation is the coordination plane. Source repositories and per-task Git worktrees remain independent data planes. Workstation-owned technical reports use the separate [`report/`](report/) catalog and do not become projects or contribution lanes.
 
 ## Quick Start
 
@@ -115,6 +118,10 @@ The workstation's evolution and context-efficiency rules are defined in
 Durable cross-project outcomes are indexed once per ISO week under
 [`summaries/weekly/`](summaries/weekly/); daily and monthly rollups are
 intentionally omitted.
+
+Technical reports are registered once in [`report/README.md`](report/README.md).
+They may synthesize evidence across projects, but they do not inherit repository
+remotes, branches, worktrees, task state, or upstream-publication authority.
 
 ## Next Project: OpenSandbox
 

@@ -17,8 +17,9 @@ controlled promotion process, not automatic accumulation.
    and task state first. Search indexes before opening reports. Read raw logs,
    benchmark data, images, and long histories only for a concrete question.
 3. **One authoritative owner.** Source stays in target repositories, task state
-   stays in lanes, reusable procedures stay in skills, and short cross-project
-   restart state stays in root `PROGRESS.md`.
+   stays in lanes, independently maintained technical synthesis stays in
+   `report/`, reusable procedures stay in skills, and short cross-project restart
+   state stays in root `PROGRESS.md`.
 4. **Generated views are disposable.** Context overlays, caches, indexes, and
    rendered summaries must be reproducible from registered sources.
 5. **Promotion requires repetition and evidence.** A one-off observation stays
@@ -51,8 +52,8 @@ flowchart LR
 - Keep always-load context below six files and 256 KiB per project.
 - Keep root `PROGRESS.md` to active state, blockers, next actions, and stop
   conditions; archive detail in task evidence or project reports.
-- Prefer filename/front-matter indexes plus `rg` over recursively reading report
-  trees.
+- Use `report/README.md` as the compact technical-report index and `rg` for
+  focused retrieval; do not recursively load the report tree.
 - Maintain one reviewed `summaries/weekly/YYYY-Www.md` index for durable
   cross-project outcomes. Update it during the week; do not create daily or
   monthly rollups.

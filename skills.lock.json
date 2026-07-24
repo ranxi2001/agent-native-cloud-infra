@@ -35,11 +35,11 @@
       "validated_at": "2026-07-18"
     },
     "route-project-work": {
-      "revision": 3,
-      "scenario": "Closed a Work API contribution by updating task evidence, portfolio state, and one weekly cross-project summary",
-      "sha256": "89041e03b902c85125cf6d9301b57ba33f326e431921998e08d6456e8a4e3e4f",
+      "revision": 4,
+      "scenario": "Registered a cross-project technical report without inventing repository or contribution-lane semantics",
+      "sha256": "1b29d34c872a45b51272eb591a7fa6a78d7745c2199085147e131e34fe7a96c5",
       "source": "local",
-      "validated_at": "2026-07-21"
+      "validated_at": "2026-07-24"
     }
   }
 }
