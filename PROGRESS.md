@@ -25,14 +25,13 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 - Workstation-owned technical reports are independently indexed under `report/`;
   they may reference registered projects but do not become project registrations
   or contribution lanes.
-- `humanizer-cs` v0.1.0 is public at
-  `https://github.com/ranxi2001/humanizer-cs`. The unreleased v0.2 corpus change
-  was fast-forwarded directly to `main@1fd2b8e` without a PR; it adds 687
-  de-identified records from 88 pre-2026 public threads, corpus validation, two
-  behavior fixtures, and two passing fresh-context manual forward tests. The
-  Python 3.11/3.12 CI run for `main@1fd2b8e` passed. The repository remains
-  outside project registration until owner-maintained repository semantics are
-  designed explicitly.
+- `humanizer-cs` v0.2.0 is formally released at
+  `https://github.com/ranxi2001/humanizer-cs/releases/tag/v0.2.0`; `main` and the
+  peeled tag point to `6b02919`. The release includes 687 de-identified records
+  from 88 pre-2026 public threads, corpus validation, two behavior fixtures, and
+  two passing fresh-context manual forward tests. Its Python 3.11/3.12 CI passed.
+  The repository remains outside project registration until owner-maintained
+  repository semantics are designed explicitly.
 - Full validation covers CLI behavior, safety-critical remote checks, skill metadata/checksums, and tracked, staged, or untracked whitespace on an unborn repository.
 - `review-agent-native-infra` revision 2 passed a fresh-context static forward test against OpenSandbox `main@18eaee779685`, with pinned evidence, loaded instructions, a lifecycle diagram, explicit validation gaps, and clean-state confirmation.
 - Karmada instructions and native skills remain available from `origin/intern` without using that learning branch as a contribution base.
@@ -64,13 +63,12 @@ Operate a reusable, skills-based workstation for concurrent open-source contribu
 - OpenSandbox candidate issues must be refreshed immediately before selection because community state changes quickly.
 - Workstation-wide doctor is red on the absent AI Agent Book and OpenSandbox
   checkouts described above.
-- `humanizer-cs` still lacks an automated model evaluation runner; publishing a
-  v0.2 Release, submitting to a marketplace, and announcing it remain
-  unauthorized.
+- `humanizer-cs` still lacks an automated model evaluation runner; marketplace
+  submission and announcement remain unauthorized.
 
 ## Next
 
-1. Design an automated model evaluation runner for `humanizer-cs`; require a new gate before publishing the v0.2 Release, marketplace submission, or announcement.
+1. Design an automated model evaluation runner for `humanizer-cs`; require a new gate before marketplace submission or announcement.
 2. Monitor AI Agent Book PR #377 for maintainer review; perform no branch update, reply, or reviewer request without a new exact gate.
 3. Extend context discovery with path-scoped nested `AGENTS.md`.
 4. Preserve Karmada's dirty `intern` checkout and create any contribution lane from refreshed `upstream/master`.
